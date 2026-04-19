@@ -1,6 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useProfileStore } from "../../stores/profileStore";
 import { useAuthStore } from "../../stores/authStore";
+import { useEffect, useState } from "react";
+import { fetchScreenHistory } from "../../services/screenApi";
 
 const navItems = [
   { to: "/onboarding", label: "Get Started", icon: "✨" },
@@ -12,6 +14,20 @@ export function AppShell({ children }) {
   const navigate = useNavigate();
   const { userId } = useProfileStore();
   const { token } = useAuthStore();
+  const [hasHistory, setHasHistory] = useState(false);
+
+  useEffect(() => {
+    async function checkHistory() {
+      if (!userId || !token) return;
+      try {
+        const res = await fetchScreenHistory(userId);
+        setHasHistory(res.data?.length > 0);
+      } catch {
+        setHasHistory(false);
+      }
+    }
+    checkHistory();
+  }, [userId, token]);
 
   return (
     <div className="app-bg">
@@ -45,13 +61,15 @@ export function AppShell({ children }) {
                 <span>👩‍⚕️</span>
                 Find Doctors
               </NavLink>
-              <NavLink
-                to="/timeline"
-                className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
-              >
-                <span>📊</span>
-                Timeline
-              </NavLink>
+              {hasHistory && (
+                <NavLink
+                  to="/timeline"
+                  className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
+                >
+                  <span>📊</span>
+                  Timeline
+                </NavLink>
+              )}
             </>
           ) : (
             <>
