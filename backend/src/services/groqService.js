@@ -29,16 +29,16 @@ async function generateConditionDetails(session) {
   "primary": {
     "short": "1-line brief description",
     "description": "2-3 sentence detailed description",
-    "symptoms": ["symptom1", "symptom2", "symptom3", "symptom4", "symptom5", "symptom6"],
-    "foods": ["food1", "food2", "food3", "food4", "food5"],
-    "precautions": ["precaution1", "precaution2", "precaution3", "precaution4"]
+    "symptoms": ["symptom1", "symptom2", "symptom3", "symptom4"],
+    "foods": ["food1", "food2", "food3"],
+    "precautions": ["simple action 1", "simple action 2", "simple action 3"]
   },
   "secondary": {
     "short": "1-line brief description",
     "description": "2-3 sentence detailed description", 
-    "symptoms": ["symptom1", "symptom2", "symptom3", "symptom4", "symptom5", "symptom6"],
-    "foods": ["food1", "food2", "food3", "food4", "food5"],
-    "precautions": ["precaution1", "precaution2", "precaution3", "precaution4"]
+    "symptoms": ["symptom1", "symptom2", "symptom3", "symptom4"],
+    "foods": ["food1", "food2", "food3"],
+    "precautions": ["simple action 1", "simple action 2", "simple action 3"]
   }
 }
 

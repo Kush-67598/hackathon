@@ -11,8 +11,11 @@ import { NearbyDoctorsPage } from "./pages/NearbyDoctorsPage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
 import { HealthChatbot } from "./components/HealthChatbot";
+import { useAuthStore } from "./stores/authStore";
 
 function App() {
+  const { token } = useAuthStore();
+  
   return (
     <>
       <AppShell>
@@ -37,8 +40,8 @@ function App() {
         </Routes>
       </AppShell>
 
-      {/* Global chatbot — visible on all pages */}
-      <HealthChatbot />
+      {/* Global chatbot — only visible when logged in */}
+      {token && <HealthChatbot />}
     </>
   );
 }

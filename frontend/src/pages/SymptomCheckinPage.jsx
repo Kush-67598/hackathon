@@ -30,6 +30,7 @@ const QUESTION_BANK = {
     label: "Fatigue",
     icon: "😴",
     question: "How often do you feel unusually tired or low on energy?",
+    normalValue: "none",
     options: [
       { value: "none", label: "Not at all", desc: "I feel energetic most days" },
       { value: "rarely", label: "Rarely", desc: "Occasional tiredness" },
@@ -49,6 +50,7 @@ const QUESTION_BANK = {
     label: "Hair Fall",
     icon: "💇",
     question: "Have you noticed increased hair shedding or thinning?",
+    normalValue: "none",
     options: [
       { value: "none", label: "No", desc: "No visible change" },
       { value: "mild", label: "Mild", desc: "Slightly increased shedding" },
@@ -67,6 +69,7 @@ const QUESTION_BANK = {
     label: "Weakness / Dizziness",
     icon: "🫧",
     question: "Do you feel physically weak, lightheaded, or dizzy?",
+    normalValue: "none",
     options: [
       { value: "none", label: "No", desc: "I feel steady" },
       { value: "rarely", label: "Rarely", desc: "Occasional episodes" },
@@ -86,6 +89,7 @@ const QUESTION_BANK = {
     label: "Irregular Cycles",
     icon: "📅",
     question: "How regular are your menstrual cycles currently?",
+    normalValue: "very_regular",
     options: [
       { value: "very_regular", label: "Very regular", desc: "Predictable cycle" },
       { value: "regular", label: "Mostly regular", desc: "Minor variation" },
@@ -105,6 +109,7 @@ const QUESTION_BANK = {
     label: "Weight Fluctuation",
     icon: "⚖️",
     question: "Have you noticed unexplained weight change?",
+    normalValue: "none",
     options: [
       { value: "none", label: "No change", desc: "Weight stable" },
       { value: "slight_gain", label: "Slight gain", desc: "2-4 kg" },
@@ -124,6 +129,7 @@ const QUESTION_BANK = {
     label: "Mood Fluctuations",
     icon: "🌊",
     question: "How variable has your mood been recently?",
+    normalValue: "none",
     options: [
       { value: "none", label: "Stable", desc: "Mood is steady" },
       { value: "mild", label: "Mild shifts", desc: "Occasional ups/downs" },
@@ -142,6 +148,7 @@ const QUESTION_BANK = {
     label: "Irritability",
     icon: "😤",
     question: "How often do you feel unusually irritable?",
+    normalValue: "none",
     options: [
       { value: "none", label: "Rarely", desc: "Not unusual for me" },
       { value: "mild", label: "Sometimes", desc: "Mild increase" },
@@ -160,6 +167,7 @@ const QUESTION_BANK = {
     label: "Anxiety / Restlessness",
     icon: "💭",
     question: "How often do you feel anxious or restless without a clear trigger?",
+    normalValue: "none",
     options: [
       { value: "none", label: "Rarely", desc: "Within normal range" },
       { value: "mild", label: "Sometimes", desc: "Occasional restlessness" },
@@ -178,6 +186,7 @@ const QUESTION_BANK = {
     label: "Poor Sleep Quality",
     icon: "🛌",
     question: "How would you rate your sleep quality?",
+    normalValue: "none",
     options: [
       { value: "none", label: "Good", desc: "Restful most nights" },
       { value: "mild", label: "Slightly poor", desc: "Occasional poor nights" },
@@ -196,6 +205,7 @@ const QUESTION_BANK = {
     label: "Low Sunlight Exposure",
     icon: "🌥️",
     question: "How much daylight/sun exposure do you get in a typical day?",
+    normalValue: "none",
     options: [
       { value: "none", label: "Good exposure", desc: "Most days outdoors" },
       { value: "mild", label: "Limited", desc: "Brief sunlight" },
@@ -214,6 +224,7 @@ const QUESTION_BANK = {
     label: "Low Physical Activity",
     icon: "🪑",
     question: "How physically active are you currently?",
+    normalValue: "none",
     options: [
       { value: "none", label: "Active", desc: "Regular activity" },
       { value: "mild", label: "Slightly low", desc: "Reduced activity" },
@@ -228,6 +239,274 @@ const QUESTION_BANK = {
       { value: 24, label: "6+ months" },
     ],
   },
+  skin_issues: {
+    label: "Skin Changes",
+    icon: "🧴",
+    question: "Have you noticed any changes in your skin?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No significant change", desc: "Skin is normal" },
+      { value: "dryness", label: "Dryness", desc: "Dry, flaky skin" },
+      { value: "acne", label: "Acne/Breakouts", desc: "Frequent pimples" },
+      { value: "hyperpigmentation", label: "Dark patches", desc: "Melasma/spots" },
+      { value: "multiple", label: "Multiple issues", desc: "Several skin problems" },
+    ],
+    durationQ: "How long have these skin changes persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  heavy_bleeding: {
+    label: "Heavy Period Flow",
+    icon: "🩸",
+    question: "How would you describe your period flow?",
+    normalValue: "moderate",
+    options: [
+      { value: "none", label: "Not applicable", desc: "No periods/menopause" },
+      { value: "light", label: "Light", desc: "Minimal flow" },
+      { value: "moderate", label: "Moderate", desc: "Normal flow" },
+      { value: "heavy", label: "Heavy", desc: "Heavy flow" },
+      { value: "very_heavy", label: "Very heavy", desc: "Soaking through" },
+    ],
+    durationQ: "How long has this flow pattern continued?",
+    durationOptions: [
+      { value: 6, label: "1-3 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6-12 months" },
+      { value: 36, label: "1+ year" },
+    ],
+  },
+  menstrual_cramps: {
+    label: "Period Cramps",
+    icon: "🤸",
+    question: "How severe are your menstrual cramps?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Minimal", desc: "Little to no pain" },
+      { value: "mild", label: "Mild", desc: "Manageable discomfort" },
+      { value: "moderate", label: "Moderate", desc: "Needs pain relief" },
+      { value: "severe", label: "Severe", desc: "Affects daily life" },
+    ],
+    durationQ: "How long has this pain pattern continued?",
+    durationOptions: [
+      { value: 6, label: "1-3 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6-12 months" },
+      { value: 48, label: "1+ year" },
+    ],
+  },
+  bloating: {
+    label: "Bloating",
+    icon: "🎈",
+    question: "How often do you feel bloated?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Rarely", desc: "Not common" },
+      { value: "mild", label: "Sometimes", desc: "Occasional bloating" },
+      { value: "moderate", label: "Often", desc: "Frequent bloating" },
+      { value: "severe", label: "Almost always", desc: "Persistent bloating" },
+    ],
+    durationQ: "How long have you experienced this?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  hot_flashes: {
+    label: "Hot Flashes",
+    icon: "🔥",
+    question: "Do you experience hot flashes or night sweats?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "Not experiencing" },
+      { value: "mild", label: "Occasional", desc: "Rare episodes" },
+      { value: "moderate", label: "Frequent", desc: "Several times a week" },
+      { value: "severe", label: "Very frequent", desc: "Daily episodes" },
+    ],
+    durationQ: "How long have you had these?",
+    durationOptions: [
+      { value: 2, label: "1-2 weeks" },
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3+ months" },
+    ],
+  },
+  cold_intolerance: {
+    label: "Cold Intolerance",
+    icon: "❄️",
+    question: "How do you feel in cold weather?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "Comfortable in cold" },
+      { value: "mild", label: "Feel cold easily", desc: "Get cold faster" },
+      { value: "moderate", label: "Very sensitive", desc: "Always cold" },
+      { value: "severe", label: "Extreme sensitivity", desc: "Hands/feet always cold" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  brain_fog: {
+    label: "Brain Fog",
+    icon: "🌫️",
+    question: "How would you describe your mental clarity?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Clear", desc: " Sharp focus" },
+      { value: "mild", label: "Slightly foggy", desc: "Occasional brain fog" },
+      { value: "moderate", label: "Foggy", desc: "Frequent forgetfulness" },
+      { value: "severe", label: "Very foggy", desc: "Difficulty concentrating" },
+    ],
+    durationQ: "How long have you noticed this?",
+    durationOptions: [
+      { value: 2, label: "1-2 weeks" },
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3+ months" },
+    ],
+  },
+  appetite_changes: {
+    label: "Appetite Changes",
+    icon: "🍽️",
+    question: "How has your appetite changed?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "Same as before" },
+      { value: "increased", label: "Increased", desc: "Much hungrier" },
+      { value: "decreased", label: "Decreased", desc: "Less hungry" },
+      { value: "variable", label: "Variable", desc: "Up and down" },
+    ],
+    durationQ: "How long has this pattern continued?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  food_cravings: {
+    label: "Food Cravings",
+    icon: "🍫",
+    question: "How strong are your food cravings?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "No unusual cravings" },
+      { value: "mild", label: "Mild", desc: "Occasional cravings" },
+      { value: "moderate", label: "Moderate", desc: "Strong cravings" },
+      { value: "severe", label: "Very strong", desc: "Cravings affect diet" },
+    ],
+    durationQ: "How long have cravings been strong?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  brittle_nails: {
+    label: "Brittle Nails",
+    icon: "💅",
+    question: "How would you describe your nails?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Healthy", desc: "Strong nails" },
+      { value: "mild", label: "Slightly weak", desc: "Occasional breaking" },
+      { value: "moderate", label: "Brittle", desc: "Break easily" },
+      { value: "severe", label: "Very brittle", desc: "Peeling/splitting" },
+    ],
+    durationQ: "How long have nails been weak?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  breast_tenderness: {
+    label: "Breast Tenderness",
+    icon: "🫧",
+    question: "Do you experience breast tenderness or swelling?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "No discomfort" },
+      { value: "mild", label: "Mild", desc: "Slight tenderness" },
+      { value: "moderate", label: "Moderate", desc: "Noticeable pain" },
+      { value: "severe", label: "Severe", desc: "Very painful" },
+    ],
+    durationQ: "How long have you noticed this?",
+    durationOptions: [
+      { value: 2, label: "1-2 weeks" },
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3+ months" },
+    ],
+  },
+  headaches: {
+    label: "Headaches",
+    icon: "🤕",
+    question: "How often do you get headaches?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Rarely", desc: "Occasional" },
+      { value: "mild", label: "Sometimes", desc: "Few times a month" },
+      { value: "moderate", label: "Often", desc: "Weekly" },
+      { value: "severe", label: "Very often", desc: "Daily/near daily" },
+    ],
+    durationQ: "How long has this frequency persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  libido_changes: {
+    label: "Libido Changes",
+    icon: "💕",
+    question: "How has your interest in intimacy changed?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Same as before", desc: "No change" },
+      { value: "decreased", label: "Decreased", desc: "Less interest" },
+      { value: "significantly_decreased", label: "Much less", desc: "Rarely interested" },
+      { value: "increased", label: "Increased", desc: "More interest" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  palpitations: {
+    label: "Heart Palpitations",
+    icon: "💓",
+    question: "Do you experience heart palpitations or racing heart?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "Heart rate normal" },
+      { value: "mild", label: "Occasional", desc: "Rare episodes" },
+      { value: "moderate", label: "Frequent", desc: "Often feel racing" },
+      { value: "severe", label: "Very frequent", desc: "Daily episodes" },
+    ],
+    durationQ: "How long have you had these?",
+    durationOptions: [
+      { value: 2, label: "1-2 weeks" },
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3+ months" },
+    ],
+  },
 };
 
 function SymptomCard({ symptom, categoryKey, onChange }) {
@@ -236,6 +515,8 @@ function SymptomCard({ symptom, categoryKey, onChange }) {
 
   const currentValue = symptom.severity || "none";
   const currentDuration = symptom.durationWeeks || 4;
+  const normalValue = config.normalValue || "none";
+  const showDuration = currentValue !== normalValue;
 
   return (
     <div className="card card-interactive" style={{ marginBottom: "var(--space-4)" }}>
@@ -264,24 +545,26 @@ function SymptomCard({ symptom, categoryKey, onChange }) {
         </div>
       </div>
 
-      <div className="mcq-question" style={{ marginTop: "var(--space-5)" }}>
-        <p style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginBottom: "var(--space-3)" }}>{config.durationQ}</p>
-        <div className="mcq-options cols-4">
-          {config.durationOptions.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              className={`mcq-option ${currentDuration === opt.value ? "selected" : ""}`}
-              onClick={() => onChange(categoryKey, symptom.name, "durationWeeks", opt.value)}
-            >
-              <div className="mcq-option-dot" />
-              <div className="mcq-option-text">
-                <span className="mcq-option-label" style={{ fontSize: "var(--text-xs)" }}>{opt.label}</span>
-              </div>
-            </button>
-          ))}
+      {showDuration && (
+        <div className="mcq-question" style={{ marginTop: "var(--space-5)" }}>
+          <p style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginBottom: "var(--space-3)" }}>{config.durationQ}</p>
+          <div className="mcq-options cols-4">
+            {config.durationOptions.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={`mcq-option ${currentDuration === opt.value ? "selected" : ""}`}
+                onClick={() => onChange(categoryKey, symptom.name, "durationWeeks", opt.value)}
+              >
+                <div className="mcq-option-dot" />
+                <div className="mcq-option-text">
+                  <span className="mcq-option-label" style={{ fontSize: "var(--text-xs)" }}>{opt.label}</span>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
