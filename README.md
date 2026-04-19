@@ -270,4 +270,8 @@ For issues or questions:
 
 ---
 
+<<<<<<< HEAD
 **Note:** This is a screening tool, NOT a medical diagnosis.
+=======
+**Note:** This is a screening tool, NOT a medical diagnosis. Always consult a healthcare professional for medical advice.
+>>>>>>> 4dadb12 (kasndm)
