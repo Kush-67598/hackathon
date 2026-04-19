@@ -82,7 +82,7 @@ export function LabUploadPage() {
         behavioral_indicators,
         symptoms: [...physical_symptoms, ...emotional_symptoms, ...behavioral_indicators],
       });
-      setLatestResult(result.sessionId, result.output);
+      setLatestResult(result.sessionId, result.output, result.conditionDetails);
       navigate(`/results/${result.sessionId}`);
     } catch (err) {
       setError(err.response?.data?.message || "Screening failed. Please try again.");
@@ -132,7 +132,7 @@ export function LabUploadPage() {
         throw new Error("Invalid response from screening: missing sessionId or output");
       }
       
-      setLatestResult(result.sessionId, result.output);
+      setLatestResult(result.sessionId, result.output, result.conditionDetails);
       navigate(`/results/${result.sessionId}`);
     } catch (err) {
       console.error("Screening error:", err);

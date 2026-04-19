@@ -129,6 +129,7 @@ export function LandingPage() {
               { n: 1, title: "Apne symptoms batao", body: "Jo bhi feel ho raha hai — thakaan, baal girna, irregular periods, mood changes.", icon: "📝" },
               { n: 2, title: "Follow-up questions", body: "Hum aapke answers ke basis par smart questions pooche hain. Jaise — kitne time se?", icon: "💬" },
               { n: 3, title: "Lab report add karo", body: "Agar lab hai to report upload karo. Isse prediction aur behtar hogi.", icon: "🧪" },
+              { n: 4, title: "Download Your Health Report", body: "Ek clinical-style PDF jo aap doctor ke saath share kar sakte ho.", icon: "📄" },
             ].map((c, i) => (
               <motion.div
                 key={c.n}
@@ -167,7 +168,7 @@ export function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Conditions Section - Light version */}
+{/* Conditions Section - Light version */}
       <section style={{ padding: "80px 40px", background: "#fbf6f0" }}>
         <motion.div
           variants={staggerContainer}
@@ -184,7 +185,7 @@ export function LandingPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
             {[
-              { title: "Hypothyroidism", subtitle: "Thyroid gland ki kami se hormonal imbalance", symptoms: ["Constant thakaan", "Weight gain", "Cold intolerance"], color: "#ec4899" },
+              { title: "Hypothyroidism", subtitle: "Thyroid gland ki kami se hormonal imbalance", symptoms: ["Constant thakaan", "Weight gain", "cold intolerance"], color: "#ec4899" },
               { title: "Iron Deficiency Anemia", subtitle: "Khoon mein iron ki kami", symptoms: ["Fatigue", "Pale skin", "Shortness of breath"], color: "#f59e0b" },
               { title: "PCOS", subtitle: "Polycystic Ovary Syndrome", symptoms: ["Irregular periods", "Weight changes", "Acne"], color: "#8b5cf6" },
               { title: "Hyperthyroidism", subtitle: "Thyroid overactivity", symptoms: ["Weight loss", "Rapid heartbeat", "Anxiety"], color: "#06b6d4" },
@@ -218,6 +219,12 @@ export function LandingPage() {
               </motion.div>
             ))}
           </div>
+
+          {/* More conditions - simple text */}
+          <motion.p variants={fadeInUp} style={{ marginTop: 32, color: "#6b7280", fontSize: 16 }}>
+            Aur bhi conditions detect hote hain jaise{' '}
+            <strong>Endometriosis, Menorrhagia, Amenorrhea, Uterine Fibroids, PMDD, Perimenopause, Vitamin Deficiencies (B Complex, D, Magnesium, Zinc), Insulin Resistance,</strong> aur bahut saare...
+          </motion.p>
         </motion.div>
       </section>
 

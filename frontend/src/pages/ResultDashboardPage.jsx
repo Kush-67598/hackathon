@@ -306,11 +306,115 @@ function MinorFactorCard({ item }) {
   );
 }
 
+function ConditionDropdown({ condition, confidence, isPrimary, aiDetails }) {
+  const [expanded, setExpanded] = useState(false);
+  const fallbackDesc = getConditionDesc(condition);
+  const details = aiDetails || fallbackDesc;
+
+  return (
+    <div style={{ 
+      marginTop: "var(--space-3)", 
+      borderRadius: "var(--radius-md)", 
+      border: expanded ? "2px solid var(--color-primary)" : "1px solid var(--color-border)",
+      overflow: "hidden",
+      background: "white",
+    }}>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        style={{
+          width: "100%",
+          padding: "var(--space-3) var(--space-4)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          textAlign: "left",
+          fontSize: "var(--text-sm)",
+          fontWeight: 600,
+          color: "var(--color-text)",
+        }}
+      >
+        <span>
+          {isPrimary ? "🔍 " : "📌 "}
+          {condition.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
+          <span style={{ marginLeft: 8, color: "var(--color-primary)", fontWeight: 700 }}>
+            {Math.round((confidence || 0) * 100)}%
+          </span>
+        </span>
+        <span style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+          ▼
+        </span>
+      </button>
+      
+      {expanded && details && (
+        <div style={{ padding: "var(--space-4)", borderTop: "1px solid var(--color-border)", background: "var(--color-bg-secondary)" }}>
+          {details.short && (
+            <p style={{ fontSize: "var(--text-xs)", fontStyle: "italic", color: "var(--color-text-secondary)", marginBottom: "var(--space-2)" }}>
+              {details.short}
+            </p>
+          )}
+          
+          {details.description && (
+            <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", lineHeight: 1.5, marginBottom: "var(--space-3)" }}>
+              {details.description}
+            </p>
+          )}
+          
+          {details.symptoms && details.symptoms.length > 0 && (
+            <div style={{ marginBottom: "var(--space-3)" }}>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--color-warning)", marginBottom: "var(--space-1)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                ⚠️ Symptoms
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                {details.symptoms.slice(0, 8).map((s, i) => (
+                  <span key={i} style={{ padding: "4px 10px", background: "#fef3c7", borderRadius: 999, fontSize: "var(--text-xs)", color: "#92400e" }}>
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {details.foods && details.foods.length > 0 && (
+            <div style={{ marginBottom: "var(--space-3)" }}>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--color-success)", marginBottom: "var(--space-1)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                🥗 Foods to Consider
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                {details.foods.slice(0, 6).map((f, i) => (
+                  <span key={i} style={{ padding: "4px 10px", background: "#d1fae5", borderRadius: 999, fontSize: "var(--text-xs)", color: "#065f46" }}>
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {details.precautions && details.precautions.length > 0 && (
+            <div>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--color-primary)", marginBottom: "var(--space-1)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                💊 Precautions
+              </div>
+              <ul style={{ margin: 0, paddingLeft: "var(--space-4)", fontSize: "var(--text-xs)", color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
+                {details.precautions.slice(0, 4).map((p, i) => (
+                  <li key={i}>{p}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ResultDashboardPage() {
   const { sessionId } = useParams();
   const navigate = useNavigate();
   const { userId } = useProfileStore();
-  const { latestOutput } = useScreeningStore();
+  const { latestOutput, conditionDetails } = useScreeningStore();
   const [progression, setProgression] = useState(null);
 
   useEffect(() => {
@@ -515,6 +619,27 @@ const allContributions = (latestOutput.symptom_contributions || [])
               </div>
             );
           })()}
+        </div>
+
+        {/* Expandable Details for Each Condition */}
+        <div style={{ marginTop: "var(--space-6)" }}>
+          <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--color-text)", marginBottom: "var(--space-3)" }}>
+            📋 View Symptoms, Precautions & Food Recommendations
+          </h3>
+          <ConditionDropdown 
+            condition={primary.tendency} 
+            confidence={primary.confidence} 
+            isPrimary={true} 
+            aiDetails={conditionDetails?.primary} 
+          />
+          {secondary.tendency && secondary.tendency !== "insufficient_data" && (
+            <ConditionDropdown 
+              condition={secondary.tendency} 
+              confidence={secondary.confidence} 
+              isPrimary={false} 
+              aiDetails={conditionDetails?.secondary} 
+            />
+          )}
         </div>
       </section>
 

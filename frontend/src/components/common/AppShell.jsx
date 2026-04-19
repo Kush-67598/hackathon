@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { fetchScreenHistory } from "../../services/screenApi";
 
 const navItemsForLoggedIn = [
-  { to: "/onboarding", label: "Get Started", icon: "✨" },
   { to: "/checkin", label: "Check-in", icon: "📋" },
   { to: "/labs/upload", label: "Lab Upload", icon: "🔬" },
   { to: "/doctors", label: "Find Doctors", icon: "👩‍⚕️" },
@@ -16,7 +15,7 @@ const navItemsForLoggedOut = [];
 export function AppShell({ children }) {
   const navigate = useNavigate();
   const { userId } = useProfileStore();
-  const { token, logout } = useAuthStore();
+  const { token, clearAuth } = useAuthStore();
   const [hasHistory, setHasHistory] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
@@ -36,7 +35,7 @@ export function AppShell({ children }) {
   }, [userId, token]);
 
   const handleLogout = () => {
-    logout();
+    clearAuth();
     navigate("/login");
   };
 
@@ -52,7 +51,7 @@ export function AppShell({ children }) {
         </div>
 
         {/* Desktop Nav */}
-        <nav className="desktop-nav">
+        <nav className="desktop-nav" style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '12px' }}>
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -75,9 +74,13 @@ export function AppShell({ children }) {
                   Timeline
                 </NavLink>
               )}
-              <button onClick={handleLogout} className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                Sign Out
-              </button>
+<button onClick={handleLogout} className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }} title="Sign Out">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                </button>
             </>
           ) : (
             <>
@@ -91,17 +94,26 @@ export function AppShell({ children }) {
           )}
         </nav>
 
-        {/* Mobile Hamburger */}
-        <button 
-          className="mobile-menu-btn"
+        {/* Hamburger (mobile only) */}
+        <button
+          className="hamburger-btn mobile-only"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           style={{
-            display: "none",
-            background: "none",
+            position: "absolute",
+            right: 8,
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: 40,
+            height: 40,
+            borderRadius: 999,
             border: "none",
-            fontSize: 24,
+            background: "#fff",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
             cursor: "pointer",
-            padding: 8
           }}
         >
           {mobileMenuOpen ? "✕" : "☰"}
@@ -142,8 +154,8 @@ export function AppShell({ children }) {
                   </NavLink>
                 )}
                 <button 
-                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                  style={{ display: "block", width: "100%", textAlign: "left", padding: "12px 16px", background: "none", border: "none", cursor: "pointer", color: "var(--color-text)" }}
+                  onClick={(e) => { e.stopPropagation(); handleLogout(); setMobileMenuOpen(false); }}
+                  style={{ display: "block", width: "100%", textAlign: "left", padding: "12px 16px", background: "none", border: "none", cursor: "pointer", color: "var(--color-text)", fontSize: "16px", touchAction: "manipulation" }}
                 >
                   Sign Out
                 </button>
@@ -167,10 +179,10 @@ export function AppShell({ children }) {
       <style>{`
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: block !important; }
+          .mobile-only { display: inline-flex !important; }
         }
         @media (min-width: 769px) {
-          .mobile-menu-btn { display: none !important; }
+          .mobile-only { display: none !important; }
         }
       `}</style>
     </div>

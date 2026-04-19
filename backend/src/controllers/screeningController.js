@@ -1,13 +1,16 @@
 const asyncHandler = require("../utils/asyncHandler");
 const { runScreening, getScreeningHistory, getRiskProgression } = require("../services/screeningService");
 const { buildSessionReportPdf } = require("../services/reportService");
+const { generateConditionDetails } = require("../services/groqService");
 
 const screenUserRisk = asyncHandler(async (req, res) => {
   const session = await runScreening(req.body);
+  const conditionDetails = await generateConditionDetails(session);
   res.status(200).json({
     message: "Screening completed",
     sessionId: session._id,
     output: session.output,
+    conditionDetails,
   });
 });
 

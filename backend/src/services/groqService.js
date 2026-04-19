@@ -2,21 +2,95 @@ require("dotenv").config();
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-const SYSTEM_PROMPT = `You are a clinical AI assistant providing analysis for a hormonal screening report. 
-Your role is to help healthcare professionals understand screening results by:
-1. Explaining the likely condition based on symptoms and lab values
-2. Identifying key patterns and correlations
-3. Suggesting clinical considerations
-4. Recommending appropriate follow-up actions
+const SYSTEM_PROMPT = `You are a clinical AI assistant providing structured medical information for a hormonal screening report.
+Respond ONLY with valid JSON in the exact format specified. No other text.
+Your response must be a JSON object with the structure shown in the example.`;
 
-Format your response clearly with:
-- A brief condition overview
-- Key findings summary
-- Clinical considerations
-- Follow-up recommendations
+async function generateConditionDetails(session) {
+  const apiKey = process.env.GROQ_API_KEY;
+  
+  if (!apiKey || apiKey === "your_groq_api_key_here") {
+    return null;
+  }
 
-Keep explanations clear, professional, and appropriate for clinical context.
-Never provide definitive diagnoses - always emphasize these are screening indicators requiring professional evaluation.`;
+  const { inputSnapshot: input, output } = session;
+  const symptoms = input.symptoms || [];
+  const labValues = input.labValues || {};
+
+  const symptomSummary = symptoms.map((s) => s.name).join(", ") || "Not specified";
+  const labSummary = Object.entries(labValues)
+    .filter(([, v]) => v !== null && v !== undefined && v !== "")
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(", ") || "No lab values";
+
+  const userMessage = `Respond with ONLY JSON. No other text. Format:
+
+{
+  "primary": {
+    "short": "1-line brief description",
+    "description": "2-3 sentence detailed description",
+    "symptoms": ["symptom1", "symptom2", "symptom3", "symptom4", "symptom5", "symptom6"],
+    "foods": ["food1", "food2", "food3", "food4", "food5"],
+    "precautions": ["precaution1", "precaution2", "precaution3", "precaution4"]
+  },
+  "secondary": {
+    "short": "1-line brief description",
+    "description": "2-3 sentence detailed description", 
+    "symptoms": ["symptom1", "symptom2", "symptom3", "symptom4", "symptom5", "symptom6"],
+    "foods": ["food1", "food2", "food3", "food4", "food5"],
+    "precautions": ["precaution1", "precaution2", "precaution3", "precaution4"]
+  }
+}
+
+Condition: ${output.primary_tendency}
+Confidence: ${(output.confidence * 100).toFixed(0)}%
+Secondary: ${output.secondary_tendency || "none"}
+Secondary Confidence: ${(output.secondary_confidence * 100).toFixed(0)}%
+
+Symptoms: ${symptomSummary}
+Labs: ${labSummary}`;
+
+  try {
+    const response = await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: userMessage },
+        ],
+        temperature: 0.2,
+        max_tokens: 1200,
+        response_format: { type: "json_object" },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Groq API error:", response.status, errorData);
+      return null;
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    
+    if (!content) return null;
+
+    try {
+      return JSON.parse(content);
+    } catch (parseError) {
+      console.error("Failed to parse Groq response:", parseError.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Groq API request failed:", error.message);
+    return null;
+  }
+}
 
 async function generateClinicalInsights(session) {
   const apiKey = process.env.GROQ_API_KEY;
@@ -97,4 +171,4 @@ Provide a concise clinical analysis covering:
   }
 }
 
-module.exports = { generateClinicalInsights };
+module.exports = { generateClinicalInsights, generateConditionDetails };
