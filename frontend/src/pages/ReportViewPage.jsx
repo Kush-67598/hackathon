@@ -40,7 +40,7 @@ export function ReportViewPage() {
   }
 
   function handleShare() {
-    const text = `Synthera Screening Result:\nPrimary: ${CONDITION_LABELS[latestOutput?.primary_tendency] || latestOutput?.primary_tendency}\nConfidence: ${Math.round((latestOutput?.confidence || 0) * 100)}%\n\nThis is a screening result, not a medical diagnosis.`;
+    const text = `Niramaya Screening Result:\nPrimary: ${CONDITION_LABELS[latestOutput?.primary_tendency] || latestOutput?.primary_tendency}\nConfidence: ${Math.round((latestOutput?.confidence || 0) * 100)}%\n\nThis is a screening result, not a medical diagnosis.`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

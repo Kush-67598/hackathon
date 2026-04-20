@@ -1,8 +1,8 @@
-# Synthera - Women's Hormonal Health Screening Platform
+# Niramaya - Women's Hormonal Health Screening Platform
 
 A comprehensive women's hormonal health screening web application that helps detect conditions like Hypothyroidism, Anemia, PCOS, and other hormonal imbalances through symptom-based screening and optional lab reports.
 
-![Synthera](https://img.shields.io/badge/Version-1.0.0-green)
+![Niramaya](https://img.shields.io/badge/Version-1.0.0-green)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green)
 ![React](https://img.shields.io/badge/React-18+-blue)
 ![MongoDB](https://img.shields.io/badge/MongoDB-6+-green)

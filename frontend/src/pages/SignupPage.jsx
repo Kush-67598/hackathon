@@ -41,7 +41,7 @@ export function SignupPage() {
           </div>
           <h1>Create Your Account</h1>
           <p className="subtitle">
-            Join Synthera to track your hormonal health over time with personalized screening insights.
+            Join Niramaya to track your hormonal health over time with personalized screening insights.
           </p>
         </div>
 

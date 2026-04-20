@@ -3,7 +3,7 @@ import { sendChatMessage } from "../services/chatApi";
 
 const WELCOME_MSG = {
   role: "bot",
-  text: "Hi there! I'm Synthera AI 🌸 I'm here to help you understand your screening results, answer general wellness questions, and provide supportive guidance. How can I help you today?",
+  text: "Hi there! I'm Niramaya AI 🌸 I'm here to help you understand your screening results, answer general wellness questions, and provide supportive guidance. How can I help you today?",
 };
 
 const SAFETY_REMINDER = "Remember: I'm an AI companion, not a medical professional. Always consult your healthcare provider for medical advice.";
@@ -61,7 +61,7 @@ export function HealthChatbot() {
             <div style={{ fontSize: "20px" }}>🌸</div>
             <div>
               <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
-                Synthera AI
+                Niramaya AI
               </div>
               <div style={{ fontSize: "var(--text-xs)", opacity: 0.85 }}>
                 Health companion

@@ -107,7 +107,7 @@ export function OnboardingPage() {
     <>
       {/* Hero Panel */}
       <div className="panel panel-hero" style={{ marginBottom: "var(--space-6)" }}>
-        <h1>Welcome to Synthera</h1>
+        <h1>Welcome to Niramaya</h1>
         <p>Let's personalize your screening experience. Answer a few quick questions to get started.</p>
       </div>
 

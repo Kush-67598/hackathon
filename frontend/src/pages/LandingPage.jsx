@@ -252,10 +252,10 @@ export function LandingPage() {
           
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 24 }}>
             {[
+              { icon: "📊", title: "Track", desc: "Apni health ko time par track karein" },
+              { icon: "🧠", title: "Understand", desc: "Apne symptoms ko clearly samjhein" },
+              { icon: "💪", title: "Improve", desc: "Right guidance se behtar feel karein" },
               { icon: "🔒", title: "100% Private", desc: "Aapka data humare paas surakshit hai" },
-              { icon: "⚡", title: "Instant Results", desc: "Seconds mein apna result paayein" },
-              { icon: "💰", title: "Free to Use", desc: "Koi charges nahi, bilkul free" },
-              { icon: "👩‍⚕️", title: "Expert Backed", desc: "Medical experts dwara design kiya gaya" },
             ].map((item, i) => (
               <motion.div
                 key={i}

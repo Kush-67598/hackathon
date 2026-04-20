@@ -45,7 +45,7 @@ export function AppShell({ children }) {
         <div className="brand" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
           <div className="brand-icon">🌸</div>
           <div className="brand-text">
-            <span className="brand-name">Synthera</span>
+            <span className="brand-name">Niramaya</span>
             <span className="brand-tagline">Women's Health Screening</span>
           </div>
         </div>
