@@ -73,33 +73,43 @@ export function LandingPage() {
         />
       </section>
 
-      {/* Stats Banner */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        style={{ 
-          background: "var(--color-primary)", 
-          padding: "24px 40px", 
-          display: "flex", 
-          justifyContent: "center", 
-          gap: "clamp(20px, 5vw, 60px)",
-          flexWrap: "wrap",
-          color: "white",
-        }}
-      >
-        {[
-          { number: "10K+", label: "Women Screened" },
-          { number: "24", label: "Conditions Detected" },
-          { number: "95%", label: "Accuracy Rate" },
-        ].map((stat, i) => (
-          <div key={i} style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "clamp(24px, 3vw, 32px)", fontWeight: 800 }}>{stat.number}</div>
-            <div style={{ fontSize: "clamp(12px, 1.5vw, 14px)", opacity: 0.9 }}>{stat.label}</div>
-          </div>
-        ))}
-      </motion.div>
+      {/* Value Props - White Cards */}
+      <section style={{ padding: "80px 40px", background: "#fef9f5" }}>
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: 24,
+          }}
+        >
+          {[
+            { icon: "🧠", title: "Understand Your Body", desc: "Know what your symptoms mean" },
+            { icon: "💡", title: "Clarity, Not Confusion", desc: "Simple and easy explanations" },
+            { icon: "🎯", title: "Take Better Decisions", desc: "Know your next steps clearly" },
+            { icon: "💪", title: "Your Health, Your Control", desc: "Empower yourself with knowledge" },
+          ].map((item, i) => (
+            <motion.div 
+              variants={fadeInUp}
+              whileHover={{ y: -8 }}
+              style={{ 
+                textAlign: "center",
+                padding: 32,
+                background: "white",
+                borderRadius: 20,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+              }}
+            >
+              <div style={{ fontSize: 40, marginBottom: 16 }}>{item.icon}</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "var(--color-primary)", marginBottom: 8 }}>{item.title}</div>
+              <div style={{ fontSize: 14, color: "#6b7280" }}>{item.desc}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
 
       {/* Simple Process */}
       <section style={{ padding: "80px 40px", textAlign: "left", background: "#fef9f5" }}>
