@@ -9,6 +9,9 @@ export const DEFAULT_SYMPTOMS = [
   "heavy_bleeding",
   "bloating",
   "brain_fog",
+  "hot_flashes",
+  "night_sweats",
+  "poor_sleep",
 ];
 
 export const PHYSICAL_SYMPTOMS = [
@@ -16,26 +19,41 @@ export const PHYSICAL_SYMPTOMS = [
   "hair_fall",
   "weakness",
   "irregular_cycles",
+  "no_period",
   "weight_gain",
+  "weight_loss",
   "skin_issues",
+  "acne",
   "heavy_bleeding",
   "menstrual_cramps",
+  "pelvic_pain",
+  "pelvic_pressure",
   "bloating",
   "hot_flashes",
+  "night_sweats",
   "cold_intolerance",
+  "heat_intolerance",
   "brain_fog",
   "appetite_changes",
   "food_cravings",
+  "cravings",
   "brittle_nails",
   "breast_tenderness",
   "headaches",
   "palpitations",
+  "dry_skin",
+  "constipation",
+  "muscle_cramps",
+  "excessive_sweating",
+  "tremor",
 ];
 
 export const EMOTIONAL_SYMPTOMS = [
   "mood_fluctuations",
   "irritability",
   "anxiety",
+  "depression",
+  "stress",
   "libido_changes",
 ];
 
@@ -43,6 +61,8 @@ export const BEHAVIORAL_INDICATORS = [
   "poor_sleep",
   "low_sunlight_exposure",
   "sedentary_lifestyle",
+  "high_caffeine",
+  "irregular_meals",
 ];
 
 export const FREQUENCY_OPTIONS = ["none", "rarely", "sometimes", "often", "always"];

@@ -9,10 +9,22 @@ const CONDITION_LABELS = {
   pcos: "PCOS/PCOD tendency",
   hyperthyroidism: "Hyperthyroidism tendency",
   lifestyle_fatigue: "Lifestyle-related fatigue",
+  perimenopause: "Perimenopause tendency",
+  pms_pmdd: "PMS/PMDD tendency",
+  amenorrhea: "Amenorrhea tendency",
   normal: "Good Health",
 };
 
-const PRIMARY_CONDITIONS = ["anemia", "hypothyroidism", "pcos", "hyperthyroidism", "lifestyle_fatigue"];
+const PRIMARY_CONDITIONS = [
+  "anemia",
+  "hypothyroidism",
+  "pcos",
+  "hyperthyroidism",
+  "lifestyle_fatigue",
+  "perimenopause",
+  "pms_pmdd",
+  "amenorrhea"
+];
 
 const SEVERITY_SCORES = {
   none: 0,
@@ -73,16 +85,18 @@ function getConditionSignature(condition, symptoms, labs) {
     "tremor", "mood_fluctuations", "anxiety", "pelvic_pain", "heavy_bleeding", "no_period", 
     "pelvic_pressure", "cravings", "brain_fog", "muscle_cramps", "skin_issues", "frequent_infections", 
     "hot_flashes", "bloating", "menstrual_cramps", "appetite_changes", "food_cravings", "brittle_nails", 
-    "breast_tenderness", "headaches", "libido_changes", "poor_sleep", "low_sunlight_exposure", "sedentary_lifestyle"
+    "breast_tenderness", "headaches", "libido_changes", "poor_sleep", "low_sunlight_exposure", "sedentary_lifestyle",
+    "night_sweats", "depression", "irritability", "stress", "dry_skin", "constipation", "slow_heart_rate"
   ];
   
   const scores = {
     fatigue: 0, hair_fall: 0, weakness: 0, weight_gain: 0, weight_loss: 0, irregular_cycles: 0,
     acne: 0, heat_intolerance: 0, cold_intolerance: 0, palpitations: 0, increased_appetite: 0,
-    excessive_sweating: 0, tremor: 0, anxiety: 0, mood_changes: 0, low_motivation: 0,
+    excessive_sweating: 0, tremor: 0, anxiety: 0, mood_fluctuations: 0, irritability: 0, depression: 0, stress: 0,
     bloating: 0, menstrual_cramps: 0, appetite_changes: 0, food_cravings: 0, brittle_nails: 0,
     breast_tenderness: 0, headaches: 0, libido_changes: 0, poor_sleep: 0, low_sunlight_exposure: 0,
-    sedentary_lifestyle: 0, skin_issues: 0, heavy_bleeding: 0, brain_fog: 0,
+    sedentary_lifestyle: 0, skin_issues: 0, heavy_bleeding: 0, brain_fog: 0, hot_flashes: 0, night_sweats: 0,
+    pelvic_pain: 0, no_period: 0, pelvic_pressure: 0, cravings: 0, muscle_cramps: 0, dry_skin: 0, constipation: 0,
   };
   
   if (!Array.isArray(symptoms) || symptoms.length === 0) {
@@ -366,6 +380,114 @@ function evaluateLifestyleFatigue(sig, labs, lifestyle, emotionalEffects) {
     related_causes: relatedCauses,
     minor_related: minorRelated
   };
+}
+
+function evaluatePerimenopause(sig, labs) {
+  let score = 0;
+  let contributors = [];
+  
+  if (sig.irregular_cycles > 0.2) {
+    score += sig.irregular_cycles * 0.3;
+    contributors.push("irregular_cycles");
+  }
+  if (sig.hot_flashes > 0.2) {
+    score += sig.hot_flashes * 0.35;
+    contributors.push("hot_flashes");
+  }
+  if (sig.night_sweats > 0) {
+    score += sig.night_sweats * 0.25;
+    contributors.push("night_sweats");
+  }
+  if (sig.mood_fluctuations > 0.2) {
+    score += sig.mood_fluctuations * 0.2;
+    contributors.push("mood_fluctuations");
+  }
+  if (sig.anxiety > 0.2) {
+    score += sig.anxiety * 0.15;
+    contributors.push("anxiety");
+  }
+  if (sig.poor_sleep > 0.2) {
+    score += sig.poor_sleep * 0.15;
+    contributors.push("poor_sleep");
+  }
+  if (sig.fatigue > 0.2) {
+    score += sig.fatigue * 0.1;
+    contributors.push("fatigue");
+  }
+  
+  return { score: Math.min(1, score), contributors };
+}
+
+function evaluatePMSPMDD(sig, labs) {
+  let score = 0;
+  let contributors = [];
+  
+  if (sig.mood_fluctuations > 0.3) {
+    score += sig.mood_fluctuations * 0.4;
+    contributors.push("mood_fluctuations");
+  }
+  if (sig.irritability > 0.2) {
+    score += sig.irritability * 0.35;
+    contributors.push("irritability");
+  }
+  if (sig.anxiety > 0.2) {
+    score += sig.anxiety * 0.25;
+    contributors.push("anxiety");
+  }
+  if (sig.depression > 0.2) {
+    score += sig.depression * 0.3;
+    contributors.push("depression");
+  }
+  if (sig.food_cravings > 0.2) {
+    score += sig.food_cravings * 0.2;
+    contributors.push("food_cravings");
+  }
+  if (sig.bloating > 0.2) {
+    score += sig.bloating * 0.15;
+    contributors.push("bloating");
+  }
+  if (sig.breast_tenderness > 0.2) {
+    score += sig.breast_tenderness * 0.15;
+    contributors.push("breast_tenderness");
+  }
+  if (sig.menstrual_cramps > 0.2) {
+    score += sig.menstrual_cramps * 0.1;
+    contributors.push("menstrual_cramps");
+  }
+  
+  return { score: Math.min(1, score), contributors };
+}
+
+function evaluateAmenorrhea(sig, labs) {
+  let score = 0;
+  let contributors = [];
+  
+  if (sig.no_period > 0.3) {
+    score += sig.no_period * 0.5;
+    contributors.push("no_period");
+  }
+  if (sig.weight_gain > 0.2) {
+    score += sig.weight_gain * 0.2;
+    contributors.push("weight_gain");
+  }
+  if (sig.weight_loss > 0.2) {
+    score += sig.weight_loss * 0.2;
+    contributors.push("weight_loss");
+  }
+  if (sig.fatigue > 0.2) {
+    score += sig.fatigue * 0.15;
+    contributors.push("fatigue");
+  }
+  if (sig.mood_fluctuations > 0.2) {
+    score += sig.mood_fluctuations * 0.15;
+    contributors.push("mood_fluctuations");
+  }
+  if (sig.stress > 0.2) {
+    score += sig.stress * 0.2;
+    contributors.push("stress");
+  }
+  
+  return { score: Math.min(1, score), contributors };
 }
 
 const FREQUENCY_FACTOR = {
@@ -790,42 +912,7 @@ function detectMinorTendencies(params) {
   ));
 
   // New conditions
-  candidates.push(createMinorTendency(
-    "Endometriosis",
-    S(cycleSignal * 0.35, symptomSignalByName(physicalSymptoms, ["pelvic_pain"]) * 0.4, moodSignal * 0.15, symptomSignalByName(physicalSymptoms, ["heavy_bleeding"]) * 0.1),
-    maxAllowed,
-    "Severe pelvic pain with menstrual irregularities may indicate endometriosis."
-  ));
-
-  candidates.push(createMinorTendency(
-    "Menorrhagia (Heavy bleeding)",
-    S(symptomSignalByName(physicalSymptoms, ["heavy_bleeding"]) * 0.45, weaknessSignal * 0.25, fatigueSignal * 0.2, (hb !== null && hb < 12) ? 0.1 : 0),
-    maxAllowed,
-    "Heavy menstrual bleeding with fatigue suggests menorrhagia."
-  ));
-
-  candidates.push(createMinorTendency(
-    "Amenorrhea (No periods)",
-    S(cycleSignal * 0.4, symptomSignalByName(physicalSymptoms, ["no_period"]) * 0.35, weightSignal * 0.15, moodSignal * 0.1),
-    maxAllowed,
-    "Absence of periods with weight changes may indicate amenorrhea."
-  ));
-
-  candidates.push(createMinorTendency(
-    "Uterine Fibroids",
-    S(symptomSignalByName(physicalSymptoms, ["heavy_bleeding"]) * 0.35, symptomSignalByName(physicalSymptoms, ["pelvic_pressure"]) * 0.35, cycleSignal * 0.2, fatigueSignal * 0.1),
-    maxAllowed,
-    "Heavy bleeding with pelvic pressure may indicate uterine fibroids."
-  ));
-
-  candidates.push(createMinorTendency(
-    "PMDD (Severe PMS)",
-    S(moodSignal * 0.5, symptomSignalByName(emotionalSymptoms, ["depression"]) * 0.25, cycleSignal * 0.2, symptomSignalByName(emotionalSymptoms, ["irritability"]) * 0.15),
-    maxAllowed,
-    "Severe mood symptoms linked to menstrual cycle may indicate PMDD."
-  ));
-
-  candidates.push(createMinorTendency(
+candidates.push(createMinorTendency(
     "Insulin Resistance",
     S(weightSignal * 0.35, fatigueSignal * 0.25, symptomSignalByName(physicalSymptoms, ["cravings"]) * 0.2, cycleSignal * 0.15),
     maxAllowed,
@@ -1061,6 +1148,9 @@ function runScreeningEngine(params) {
   const hyperResult = evaluateHyperthyroidism(scores, labs);
   const pcosResult = evaluatePCOS(scores, labs);
   const lifestyleResult = evaluateLifestyleFatigue(scores, labs, lifestyle, emotionalEffects);
+  const perimenopauseResult = evaluatePerimenopause(scores, labs);
+  const pmsPmddResult = evaluatePMSPMDD(scores, labs);
+  const amenorrheaResult = evaluateAmenorrhea(scores, labs);
   
   const conditions = [
     { name: "anemia", score: anemiaResult.score, contributors: anemiaResult.contributors },
@@ -1068,6 +1158,9 @@ function runScreeningEngine(params) {
     { name: "hyperthyroidism", score: hyperResult.score, contributors: hyperResult.contributors },
     { name: "pcos", score: pcosResult.score, contributors: pcosResult.contributors },
     { name: "lifestyle_fatigue", score: lifestyleResult.score, contributors: lifestyleResult.contributors || [] },
+    { name: "perimenopause", score: perimenopauseResult.score, contributors: perimenopauseResult.contributors },
+    { name: "pms_pmdd", score: pmsPmddResult.score, contributors: pmsPmddResult.contributors },
+    { name: "amenorrhea", score: amenorrheaResult.score, contributors: amenorrheaResult.contributors },
   ];
   
   const ranked = conditions.filter(c => c.score > 0.12).sort((a, b) => b.score - a.score);
