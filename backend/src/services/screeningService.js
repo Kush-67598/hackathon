@@ -86,7 +86,10 @@ function getConditionSignature(condition, symptoms, labs) {
     "pelvic_pressure", "cravings", "brain_fog", "muscle_cramps", "skin_issues", "frequent_infections", 
     "hot_flashes", "bloating", "menstrual_cramps", "appetite_changes", "food_cravings", "brittle_nails", 
     "breast_tenderness", "headaches", "libido_changes", "poor_sleep", "low_sunlight_exposure", "sedentary_lifestyle",
-    "night_sweats", "depression", "irritability", "stress", "dry_skin", "constipation", "slow_heart_rate"
+    "night_sweats", "depression", "irritability", "stress", "dry_skin", "constipation", "slow_heart_rate",
+    "excess_hair", "thinning_hair", "abdominal_weight", "sugar_cravings", "shortness_breath", "pale_skin", "pica_cravings",
+    "thyroid_swelling", "family_thyroid", "thyroid_medication", "missed_periods", "family_pcos", "spoon_nails", "tea_coffee_meals",
+    "anemia_diagnosed", "iron_rich_food"
   ];
   
   const scores = {
@@ -97,6 +100,9 @@ function getConditionSignature(condition, symptoms, labs) {
     breast_tenderness: 0, headaches: 0, libido_changes: 0, poor_sleep: 0, low_sunlight_exposure: 0,
     sedentary_lifestyle: 0, skin_issues: 0, heavy_bleeding: 0, brain_fog: 0, hot_flashes: 0, night_sweats: 0,
     pelvic_pain: 0, no_period: 0, pelvic_pressure: 0, cravings: 0, muscle_cramps: 0, dry_skin: 0, constipation: 0,
+    excess_hair: 0, thinning_hair: 0, abdominal_weight: 0, sugar_cravings: 0, shortness_breath: 0, pale_skin: 0, pica_cravings: 0,
+    thyroid_swelling: 0, family_thyroid: 0, thyroid_medication: 0, missed_periods: 0, family_pcos: 0, spoon_nails: 0, tea_coffee_meals: 0,
+    anemia_diagnosed: 0, iron_rich_food: 0,
   };
   
   if (!Array.isArray(symptoms) || symptoms.length === 0) {
@@ -143,16 +149,40 @@ function evaluateAnemia(sig, labs) {
   let contributors = [];
   
   if (sig.fatigue > 0.3) {
-    score += sig.fatigue * 0.35;
+    score += sig.fatigue * 0.3;
     contributors.push("fatigue");
   }
   if (sig.weakness > 0.2) {
-    score += sig.weakness * 0.25;
+    score += sig.weakness * 0.2;
     contributors.push("weakness");
   }
   if (sig.hair_fall > 0.2) {
-    score += sig.hair_fall * 0.15;
+    score += sig.hair_fall * 0.1;
     contributors.push("hair_fall");
+  }
+  if (sig.shortness_breath > 0.2) {
+    score += sig.shortness_breath * 0.25;
+    contributors.push("shortness_breath");
+  }
+  if (sig.pale_skin > 0.2) {
+    score += sig.pale_skin * 0.15;
+    contributors.push("pale_skin");
+  }
+  if (sig.pica_cravings > 0.2) {
+    score += sig.pica_cravings * 0.2;
+    contributors.push("pica_cravings");
+  }
+  if (sig.spoon_nails > 0) {
+    score += sig.spoon_nails * 0.25;
+    contributors.push("spoon_nails");
+  }
+  if (sig.anemia_diagnosed > 0) {
+    score += sig.anemia_diagnosed * 0.3;
+    contributors.push("anemia_diagnosed");
+  }
+  if (sig.tea_coffee_meals > 0) {
+    score += sig.tea_coffee_meals * 0.15;
+    contributors.push("tea_coffee_meals");
   }
   
   if (labs.hb !== null) {
@@ -181,19 +211,27 @@ function evaluateHypothyroidism(sig, labs) {
   let score = 0;
   let contributors = [];
   
-  const hasSpecificSymptoms = (sig.weight_gain > 0.2) || (sig.cold_intolerance > 0.2) || (sig.hair_fall > 0.2);
+  const hasSpecificSymptoms = (sig.weight_gain > 0.2) || (sig.cold_intolerance > 0.2) || (sig.hair_fall > 0.2) || (sig.dry_skin > 0.2) || (sig.constipation > 0.2);
   
   if (!hasSpecificSymptoms && labs.tsh === null) {
     return { score: 0, contributors: [] };
   }
   
   if (sig.fatigue > 0.3) {
-    score += sig.fatigue * 0.3;
+    score += sig.fatigue * 0.25;
     contributors.push("fatigue");
   }
   if (sig.weight_gain > 0.2) {
-    score += sig.weight_gain * 0.25;
+    score += sig.weight_gain * 0.2;
     contributors.push("weight_gain");
+  }
+  if (sig.dry_skin > 0.2) {
+    score += sig.dry_skin * 0.2;
+    contributors.push("dry_skin");
+  }
+  if (sig.constipation > 0.2) {
+    score += sig.constipation * 0.2;
+    contributors.push("constipation");
   }
   if (sig.cold_intolerance > 0) {
     score += sig.cold_intolerance * 0.15;
@@ -202,6 +240,14 @@ function evaluateHypothyroidism(sig, labs) {
   if (sig.hair_fall > 0.2) {
     score += sig.hair_fall * 0.15;
     contributors.push("hair_fall");
+  }
+  if (sig.thyroid_swelling > 0) {
+    score += sig.thyroid_swelling * 0.3;
+    contributors.push("thyroid_swelling");
+  }
+  if (sig.family_thyroid > 0) {
+    score += sig.family_thyroid * 0.25;
+    contributors.push("family_thyroid");
   }
   if (sig.low_motivation > 0) {
     score += sig.low_motivation * 0.1;
@@ -286,20 +332,32 @@ function evaluatePCOS(sig, labs) {
   let contributors = [];
   
   if (sig.irregular_cycles > 0.3) {
-    score += sig.irregular_cycles * 0.35;
+    score += sig.irregular_cycles * 0.3;
     contributors.push("irregular_cycles");
   }
-  if (sig.weight_gain > 0.2) {
-    score += sig.weight_gain * 0.25;
-    contributors.push("weight_gain");
+  if (sig.abdominal_weight > 0.2) {
+    score += sig.abdominal_weight * 0.25;
+    contributors.push("abdominal_weight");
   }
   if (sig.acne > 0.2) {
     score += sig.acne * 0.2;
     contributors.push("acne");
   }
-  if (sig.hair_fall > 0.2) {
-    score += sig.hair_fall * 0.15;
-    contributors.push("hair_fall");
+  if (sig.excess_hair > 0.2) {
+    score += sig.excess_hair * 0.2;
+    contributors.push("excess_hair");
+  }
+  if (sig.thinning_hair > 0.2) {
+    score += sig.thinning_hair * 0.15;
+    contributors.push("thinning_hair");
+  }
+  if (sig.sugar_cravings > 0.2) {
+    score += sig.sugar_cravings * 0.15;
+    contributors.push("sugar_cravings");
+  }
+  if (sig.family_pcos > 0) {
+    score += sig.family_pcos * 0.25;
+    contributors.push("family_pcos");
   }
   
   if (labs.lh !== null && labs.fsh !== null && labs.fsh > 0) {

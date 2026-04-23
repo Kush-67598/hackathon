@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   BEHAVIORAL_INDICATORS,
   EMOTIONAL_SYMPTOMS,
+  MEDICAL_HISTORY,
   PHYSICAL_SYMPTOMS,
 } from "../constants/symptoms";
 
@@ -20,6 +21,7 @@ function flattenSymptoms(categories) {
     ...categories.physical_symptoms,
     ...categories.emotional_symptoms,
     ...categories.behavioral_indicators,
+    ...categories.medical_history,
   ];
 }
 
@@ -31,6 +33,7 @@ export const useSymptomStore = create((set) => ({
   physical_symptoms: buildCategorySymptoms(PHYSICAL_SYMPTOMS),
   emotional_symptoms: buildCategorySymptoms(EMOTIONAL_SYMPTOMS),
   behavioral_indicators: buildCategorySymptoms(BEHAVIORAL_INDICATORS),
+  medical_history: buildCategorySymptoms(MEDICAL_HISTORY),
   setSymptomField: (category, name, field, value) =>
     set((state) => ({
       [category]: updateCategoryField(state[category] || [], name, field, value),
@@ -40,6 +43,7 @@ export const useSymptomStore = create((set) => ({
       physical_symptoms: buildCategorySymptoms(PHYSICAL_SYMPTOMS),
       emotional_symptoms: buildCategorySymptoms(EMOTIONAL_SYMPTOMS),
       behavioral_indicators: buildCategorySymptoms(BEHAVIORAL_INDICATORS),
+      medical_history: buildCategorySymptoms(MEDICAL_HISTORY),
     }),
   getAllSymptoms: () => {
     const state = useSymptomStore.getState();

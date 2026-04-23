@@ -23,6 +23,12 @@ const STEP_CONFIG = [
     subtitle: "Daily pattern modifier for interpretation",
     icon: "🌿",
   },
+  {
+    key: "medical_history",
+    title: "Step 4: Medical History",
+    subtitle: "Family history and related conditions",
+    icon: "📋",
+  },
 ];
 
 const QUESTION_BANK = {
@@ -560,6 +566,308 @@ const QUESTION_BANK = {
       { value: 12, label: "3+ months" },
     ],
   },
+  // ==== Hypothyroidism Additional ====
+  dry_skin: {
+    label: "Dry Skin",
+    icon: "🧴",
+    question: "Do you have unusually dry or scaly skin?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "Skin is moisturized" },
+      { value: "mild", label: "Slightly dry", desc: "Minor dryness" },
+      { value: "moderate", label: "Dry", desc: "Noticeably dry" },
+      { value: "severe", label: "Very dry", desc: "Cracking/flaking" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  constipation: {
+    label: "Constipation",
+    icon: "💩",
+    question: "How often do you experience constipation?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Regular", desc: "Daily bowel movements" },
+      { value: "mild", label: "Occasional", desc: "Some days no movement" },
+      { value: "moderate", label: "Frequent", desc: "Infrequent" },
+      { value: "severe", label: "Severe", desc: "Strain needed" },
+    ],
+    durationQ: "How long has this pattern continued?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  // ==== PCOS Additional ====
+  acne: {
+    label: "Acne (Chin/Jaw)",
+    icon: "🥴",
+    question: "Do you experience acne, especially around chin or jaw?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Clear", desc: "No breakouts" },
+      { value: "mild", label: "Mild", desc: "Occasional pimples" },
+      { value: "moderate", label: "Moderate", desc: "Frequent breakouts" },
+      { value: "severe", label: "Severe", desc: "Cystic acne" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  excess_hair: {
+    label: "Excess Body Hair",
+    icon: "💃",
+    question: "Do you have excess facial or body hair growth?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "No excess hair" },
+      { value: "mild", label: "Mild", desc: "Slight increase" },
+      { value: "moderate", label: "Moderate", desc: "Noticeable hair" },
+      { value: "severe", label: "Severe", desc: "Excessive growth" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 8, label: "1-3 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6-12 months" },
+      { value: 36, label: "1+ year" },
+    ],
+  },
+  thinning_hair: {
+    label: "Scalp Hair Thinning",
+    icon: "👩‍🦱",
+    question: "Have you noticed hair thinning on your scalp?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "Normal volume" },
+      { value: "mild", label: "Mild", desc: "Slight thinning" },
+      { value: "moderate", label: "Moderate", desc: "Visible thinning" },
+      { value: "severe", label: "Severe", desc: "Thinning patches" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  abdominal_weight: {
+    label: "Abdominal Weight Gain",
+    icon: "🍎",
+    question: "Have you gained weight around your abdomen?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "No central weight gain" },
+      { value: "mild", label: "Slight", desc: "Minor gain" },
+      { value: "moderate", label: "Moderate", desc: "Noticeable belly" },
+      { value: "severe", label: "Significant", desc: "Prominent belly" },
+    ],
+    durationQ: "When did this weight pattern start?",
+    durationOptions: [
+      { value: 4, label: "< 1 month" },
+      { value: 8, label: "1-3 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  sugar_cravings: {
+    label: "Sugar Cravings / Crashes",
+    icon: "🍬",
+    question: "Do you experience sugar cravings or energy crashes after meals?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "No unusual cravings" },
+      { value: "mild", label: "Occasional", desc: "Sometimes crave sugar" },
+      { value: "moderate", label: "Frequent", desc: "Crave often" },
+      { value: "severe", label: "Very strong", desc: "Constant cravings" },
+    ],
+    durationQ: "How long have cravings been strong?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  // ==== Anemia Additional ====
+  shortness_breath: {
+    label: "Shortness of Breath",
+    icon: "😮‍💨",
+    question: "Do you feel breathless during mild activities?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "Breathing normal" },
+      { value: "mild", label: "Occasional", desc: "Mild breathlessness" },
+      { value: "moderate", label: "Frequent", desc: "Often breathless" },
+      { value: "severe", label: "Severe", desc: "Even at rest" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 2, label: "1-2 weeks" },
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3+ months" },
+    ],
+  },
+  pale_skin: {
+    label: "Pale Skin/Eyes",
+    icon: "🤕",
+    question: "Have you noticed your skin or inner eyelids looking pale?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "Healthy color" },
+      { value: "mild", label: "Slightly pale", desc: "Little paler" },
+      { value: "moderate", label: "Pale", desc: "Noticeably pale" },
+      { value: "severe", label: "Very pale", desc: "Very pale" },
+    ],
+    durationQ: "How long have you noticed this?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  pica_cravings: {
+    label: "Pica (Non-food Cravings)",
+    icon: "🧱",
+    question: "Do you crave non-food items like ice, chalk, mud, or raw rice?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "No such cravings" },
+      { value: "mild", label: "Occasional", desc: "Rarely" },
+      { value: "moderate", label: "Sometimes", desc: "A few times" },
+      { value: "severe", label: "Frequently", desc: "Often crave these" },
+    ],
+    durationQ: "How long have you had these cravings?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  // ==== YES/NO History Questions ====
+  thyroid_swelling: {
+    label: "Neck Swelling",
+    icon: "🔴",
+    question: "Have you noticed any swelling or fullness in the front of your neck?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "No swelling" },
+      { value: "yes", label: "Yes", desc: "Noticeable swelling" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  family_thyroid: {
+    label: "Family Thyroid History",
+    icon: "👨‍👩‍👧",
+    question: "Has anyone in your family been diagnosed with thyroid disease?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "No family history" },
+      { value: "yes", label: "Yes", desc: "Family history" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  thyroid_medication: {
+    label: "Thyroid Medication",
+    icon: "💊",
+    question: "Are you currently taking thyroid medication?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "Not taking medication" },
+      { value: "yes", label: "Yes", desc: "Currently on medication" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  missed_periods: {
+    label: "Missed Periods",
+    icon: "⏱️",
+    question: "Have you missed periods for more than 2-3 months?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "Regular periods" },
+      { value: "yes", label: "Yes", desc: "Missed 2-3+ months" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  family_pcos: {
+    label: "Family PCOS/Diabetes",
+    icon: "🧬",
+    question: "Does anyone in your family have PCOS or diabetes?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "No family history" },
+      { value: "yes", label: "Yes", desc: "Family history" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  spoon_nails: {
+    label: "Spoon-shaped Nails",
+    icon: "💅",
+    question: "Do your nails break easily or appear spoon-shaped?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "Healthy nails" },
+      { value: "yes", label: "Yes", desc: "Spoon-shaped/fragile" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  tea_coffee_meals: {
+    label: "Tea/Coffee with Meals",
+    icon: "☕",
+    question: "Do you drink tea or coffee with meals?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "Not with meals" },
+      { value: "yes", label: "Yes", desc: "Regularly with meals" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  anemia_diagnosed: {
+    label: "Previous Anemia",
+    icon: "📋",
+    question: "Have you been diagnosed with anemia before?",
+    normalValue: "no",
+    options: [
+      { value: "no", label: "No", desc: "No previous diagnosis" },
+      { value: "yes", label: "Yes", desc: "Previous diagnosis" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
+  iron_rich_food: {
+    label: "Iron-rich Food",
+    icon: "🥩",
+    question: "Do you regularly consume iron-rich foods (spinach, lentils, meat, eggs)?",
+    normalValue: "yes",
+    options: [
+      { value: "yes", label: "Yes", desc: "Regularly consume" },
+      { value: "no", label: "No", desc: "Rarely consume" },
+    ],
+    durationQ: null,
+    durationOptions: [],
+  },
 };
 
 function SymptomCard({ symptom, categoryKey, onChange }) {
@@ -690,6 +998,7 @@ export function SymptomCheckinPage() {
     physical_symptoms,
     emotional_symptoms,
     behavioral_indicators,
+    medical_history,
     setSymptomField,
   } = useSymptomStore();
 
@@ -702,16 +1011,18 @@ export function SymptomCheckinPage() {
   const stepSymptoms = useMemo(() => {
     if (step.key === "physical_symptoms") return physical_symptoms;
     if (step.key === "emotional_symptoms") return emotional_symptoms;
+    if (step.key === "medical_history") return medical_history;
     return behavioral_indicators;
-  }, [step, physical_symptoms, emotional_symptoms, behavioral_indicators]);
+  }, [step, physical_symptoms, emotional_symptoms, behavioral_indicators, medical_history]);
 
   const allSymptoms = useMemo(
     () => [
       ...physical_symptoms,
       ...emotional_symptoms,
       ...behavioral_indicators,
+      ...medical_history,
     ],
-    [physical_symptoms, emotional_symptoms, behavioral_indicators],
+    [physical_symptoms, emotional_symptoms, behavioral_indicators, medical_history],
   );
 
   const handleContinue = () => {
@@ -834,7 +1145,7 @@ export function SymptomCheckinPage() {
               fontWeight: 800,
               boxShadow: '0 4px 12px rgba(124, 111, 205, 0.2)'
             }}>
-              Step {stepIndex + 1} / 3
+              Step {stepIndex + 1} / 4
             </div>
           </div>
         </div>

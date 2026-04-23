@@ -46,6 +46,25 @@ export const PHYSICAL_SYMPTOMS = [
   "muscle_cramps",
   "excessive_sweating",
   "tremor",
+  "excess_hair",
+  "thinning_hair",
+  "abdominal_weight",
+  "sugar_cravings",
+  "shortness_breath",
+  "pale_skin",
+  "pica_cravings",
+];
+
+export const MEDICAL_HISTORY = [
+  "thyroid_swelling",
+  "family_thyroid",
+  "thyroid_medication",
+  "missed_periods",
+  "family_pcos",
+  "spoon_nails",
+  "tea_coffee_meals",
+  "anemia_diagnosed",
+  "iron_rich_food",
 ];
 
 export const EMOTIONAL_SYMPTOMS = [

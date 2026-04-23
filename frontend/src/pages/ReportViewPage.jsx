@@ -69,131 +69,220 @@ export function ReportViewPage() {
   const recommendations = latestOutput.actionable_recommendations || latestOutput.recommendations || [];
 
   return (
-    <>
-      <div className="panel panel-hero" style={{ marginBottom: "var(--space-6)" }}>
-        <h1>Your Screening Report</h1>
-        <p>A shareable summary of your hormonal risk screening for follow-up with your healthcare provider.</p>
-        <p style={{ fontSize: "var(--text-sm)", marginTop: "var(--space-2)" }}>Session ID: {sessionId}</p>
+    <div style={{ background: '#F8FAFC', minHeight: '100vh', padding: '40px 20px', fontFamily: "'Inter', sans-serif" }}>
+      
+      {/* ── HEADER SECTION ── */}
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#0F172A', marginBottom: '8px', letterSpacing: '-0.02em' }}>
+          Your Screening Report
+        </h1>
+        <p style={{ color: '#64748B', fontSize: '15px', maxWidth: '500px', margin: '0 auto', lineHeight: 1.6 }}>
+          A professional summary of your hormonal risk factors, designed to facilitate discussions with your healthcare provider.
+        </p>
+        <div style={{ marginTop: '16px', display: 'inline-block', padding: '6px 14px', background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '10px', fontSize: '12px', color: '#94A3B8', fontWeight: 600 }}>
+          Session Ref: <span style={{ fontFamily: 'monospace', color: '#475569' }}>{sessionId}</span>
+        </div>
       </div>
 
-      <section className="panel" style={{ marginBottom: "var(--space-4)" }}>
-        {/* Result Summary Card */}
-        <div
-          style={{
-            background: "linear-gradient(135deg, var(--color-primary-light), var(--color-accent-light))",
-            border: "1px solid var(--color-primary-muted)",
-            borderRadius: "var(--radius-xl)",
-            padding: "var(--space-8)",
-            textAlign: "center",
-            marginBottom: "var(--space-6)",
-          }}
-        >
-          <div style={{ fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-primary)", fontWeight: 600, marginBottom: "var(--space-2)" }}>
+      {/* ── MAIN REPORT PANEL ── */}
+      <section style={{ 
+        maxWidth: '800px', 
+        margin: '0 auto 32px', 
+        background: '#FFFFFF', 
+        borderRadius: '32px', 
+        padding: '32px',
+        boxShadow: '0 4px 24px rgba(0, 0, 0, 0.03)',
+        border: '1px solid #E2E8F0',
+      }}>
+        
+        {/* ── PRIMARY RESULT HERO ── */}
+        <div style={{
+          background: 'linear-gradient(135deg, #F5F3FF, #FDF8FF)',
+          border: '1px solid #EDE9FE',
+          borderRadius: '24px',
+          padding: '40px 24px',
+          textAlign: 'center',
+          marginBottom: '32px',
+          position: 'relative'
+        }}>
+          <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#7C6FCD", fontWeight: 800, marginBottom: "12px" }}>
             Primary Screening Tendency
           </div>
-          <h2 style={{ color: "var(--color-primary)", fontSize: "var(--text-3xl)", marginBottom: "var(--space-4)" }}>
+          <h2 style={{ color: "#2A1F4E", fontSize: "32px", fontWeight: 800, marginBottom: "20px", letterSpacing: '-0.02em' }}>
             {primaryLabel}
           </h2>
-          <div
-            style={{
-              fontSize: "var(--text-4xl)",
-              fontWeight: 800,
-              fontFamily: "var(--font-display)",
-              color: primaryConf >= 65 ? "var(--color-danger)" : primaryConf >= 35 ? "var(--color-warning)" : "var(--color-success)",
-              marginBottom: "var(--space-3)",
-            }}
-          >
-            {primaryConf}%
+          
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ 
+              fontSize: "56px", 
+              fontWeight: 900, 
+              color: primaryConf >= 65 ? "#E11D48" : primaryConf >= 35 ? "#C9A44A" : "#10B981",
+              lineHeight: 1 
+            }}>
+              {primaryConf}%
+            </div>
+            <div style={{ fontSize: '13px', color: '#94A3B8', fontWeight: 600, marginTop: '8px' }}>Confidence Match Score</div>
           </div>
-          <div className="progress-track" style={{ maxWidth: "300px", margin: "0 auto", height: "14px" }}>
-            <div className="progress-fill" style={{ width: `${primaryConf}%` }} />
+
+          <div style={{ background: '#FFFFFF', height: '10px', borderRadius: '20px', maxWidth: '300px', margin: '0 auto', border: '1px solid #F1F5F9', overflow: 'hidden' }}>
+            <div style={{ 
+              width: `${primaryConf}%`, 
+              height: '100%', 
+              background: 'linear-gradient(90deg, #7C6FCD, #B09EE8)',
+              borderRadius: '20px',
+              transition: 'width 1s ease-in-out'
+            }} />
           </div>
         </div>
 
-        {/* Secondary Result */}
+        {/* ── SECONDARY FINDINGS ── */}
         {secondaryLabel !== "None" && (
-          <div className="card" style={{ marginBottom: "var(--space-6)", background: "var(--color-bg)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <p style={{ fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-text-muted)", fontWeight: 600, marginBottom: "var(--space-1)" }}>
-                  Secondary Tendency
-                </p>
-                <h3>{secondaryLabel}</h3>
+          <div style={{ 
+            background: '#F8FAFC', 
+            borderRadius: '20px', 
+            padding: '20px 24px', 
+            border: '1px solid #E2E8F0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '32px'
+          }}>
+            <div>
+              <div style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.05em", color: "#94A3B8", fontWeight: 700, marginBottom: "4px" }}>
+                Secondary Tendency
               </div>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "var(--text-2xl)", fontWeight: 800, fontFamily: "var(--font-display)", color: "var(--color-text-muted)" }}>
-                  {secondaryConf}%
-                </div>
-              </div>
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0F172A', margin: 0 }}>{secondaryLabel}</h3>
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 800, color: "#64748B" }}>
+              {secondaryConf}%
             </div>
           </div>
         )}
 
-        {/* Recommendations */}
-        <div className="section-title">
-          <h3>📋 Recommended Next Steps</h3>
+        {/* ── RECOMMENDATIONS ── */}
+        <div style={{ marginBottom: '32px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0F172A', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ opacity: 0.5 }}>📋</span> Recommended Next Steps
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {recommendations.length > 0 ? (
+              recommendations.map((item, idx) => (
+                <div key={idx} style={{ 
+                  display: 'flex', 
+                  gap: '16px', 
+                  padding: '16px', 
+                  background: '#FFFFFF', 
+                  border: '1px solid #F1F5F9', 
+                  borderRadius: '16px',
+                  alignItems: 'center'
+                }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: '#F5F3FF', color: '#7C6FCD', display: 'grid', placeItems: 'center', fontSize: '14px', flexShrink: 0 }}>
+                    📌
+                  </div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#475569', lineHeight: 1.5 }}>{item}</div>
+                </div>
+              ))
+            ) : (
+              <p style={{ color: '#94A3B8', fontSize: '14px' }}>No specific recommendations generated.</p>
+            )}
+          </div>
         </div>
-        {recommendations.length > 0 ? (
-          recommendations.map((item, idx) => (
-            <div key={idx} className="recommendation-card">
-              <div className="rec-icon tracking">📌</div>
-              <div className="rec-text">
-                <div className="rec-title">{item}</div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-muted">No specific recommendations.</p>
-        )}
 
-        {/* Confounding Factors */}
+        {/* ── CONTEXTUAL FACTORS ── */}
         {(latestOutput.confounding_flags || []).length > 0 && (
-          <>
-            <div className="section-title">
-              <h3>⚡ Lifestyle Factors to Consider</h3>
-            </div>
-            <div className="confound-tags">
+          <div style={{ marginBottom: '32px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0F172A', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ opacity: 0.5 }}>⚡</span> Lifestyle Considerations
+            </h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
               {(latestOutput.confounding_flags || []).map((flag) => (
-                <span key={flag} className="confound-tag">
+                <span key={flag} style={{ 
+                  padding: '8px 16px', 
+                  background: '#FFFBEB', 
+                  color: '#92400E', 
+                  border: '1px solid #FEF3C7',
+                  borderRadius: '12px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  textTransform: 'capitalize'
+                }}>
                   {flag.replace(/_/g, " ")}
                 </span>
               ))}
             </div>
-          </>
+          </div>
         )}
 
-        {/* Disclaimer */}
-        <div className="disclaimer">
-          <span className="disclaimer-icon">⚠️</span>
-          <div>
-            <strong>This is a screening result, not a medical diagnosis.</strong>
-            <br />
-            The information provided is based on symptom patterns and optional lab values. It does not replace professional medical evaluation. Always consult a qualified healthcare provider for proper diagnosis and treatment.
+        {/* ── CLINICAL DISCLAIMER ── */}
+        <div style={{ 
+          padding: '24px', 
+          background: '#F1F5F9', 
+          borderRadius: '24px', 
+          fontSize: '13px', 
+          color: '#64748B', 
+          lineHeight: 1.6,
+          border: '1px solid #E2E8F0'
+        }}>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '8px', color: '#475569' }}>
+            <span style={{ fontSize: '18px' }}>⚠️</span>
+            <strong style={{ fontSize: '14px' }}>Medical Disclaimer</strong>
+          </div>
+          This document is a report of statistical symptom patterns and does not constitute a medical diagnosis, prognosis, or treatment plan. The results are intended for informational purposes to aid your consultation with a licensed medical professional. Always seek the advice of your physician regarding any medical condition.
+        </div>
+      </section>
+
+      {/* ── ACTION BAR ── */}
+      <section style={{ maxWidth: '800px', margin: '0 auto 60px', textAlign: 'center' }}>
+        <div style={{ background: '#FFFFFF', padding: '32px', borderRadius: '32px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+          <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '12px' }}>Share with your Doctor</h3>
+          <p style={{ color: '#64748B', fontSize: '14px', marginBottom: '24px' }}>
+            Take the next step by either downloading this report or finding a nearby specialist.
+          </p>
+          
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button 
+              onClick={handleDownloadPdf} 
+              disabled={downloading}
+              style={{ 
+                padding: '14px 28px', borderRadius: '14px', background: '#0F172A', color: '#FFF', 
+                border: 'none', fontWeight: 700, fontSize: '15px', cursor: 'pointer', display: 'flex', gap: '10px', alignItems: 'center' 
+              }}
+            >
+              {downloading ? "Generating..." : <><span>📄</span> Download PDF</>}
+            </button>
+
+            <button 
+              onClick={handleShare} 
+              style={{ 
+                padding: '14px 28px', borderRadius: '14px', background: '#FFFFFF', color: '#475569', 
+                border: '1px solid #E2E8F0', fontWeight: 700, fontSize: '15px', cursor: 'pointer' 
+              }}
+            >
+              {copied ? "✅ Copied!" : "📋 Copy Summary"}
+            </button>
+
+            <button 
+              onClick={() => navigate("/doctors", { state: { condition: latestOutput?.primary_tendency } })}
+              style={{ 
+                padding: '14px 28px', borderRadius: '14px', background: 'linear-gradient(135deg, #7C6FCD, #9B8EDF)', 
+                color: '#FFF', border: 'none', fontWeight: 700, fontSize: '15px', cursor: 'pointer', boxShadow: '0 8px 16px rgba(124, 111, 205, 0.2)' 
+              }}
+            >
+              👩‍⚕️ Find Specialists
+            </button>
+
+            <button 
+              onClick={() => navigate(`/results/${sessionId}`)}
+              style={{ 
+                padding: '14px 28px', borderRadius: '14px', background: 'transparent', color: '#94A3B8', 
+                border: 'none', fontWeight: 700, fontSize: '15px', cursor: 'pointer' 
+              }}
+            >
+              ← Back to Analysis
+            </button>
           </div>
         </div>
       </section>
-
-      {/* Actions */}
-      <section className="panel">
-        <h3 style={{ marginBottom: "var(--space-4)" }}>Share Your Report</h3>
-        <p style={{ marginBottom: "var(--space-4)" }}>
-          Download a PDF report or share a text summary with your healthcare provider.
-        </p>
-        <div className="button-row">
-          <button className="btn btn-primary" onClick={handleDownloadPdf} disabled={downloading}>
-            {downloading ? "🤖 Generating..." : "📄 Download PDF Report"}
-          </button>
-          <button className="btn btn-secondary" onClick={handleShare}>
-            {copied ? "✅ Copied!" : "📋 Copy Summary"}
-          </button>
-          <button className="btn btn-accent" onClick={() => navigate("/doctors", { state: { condition: latestOutput?.primary_tendency } })}>
-            👩‍⚕️ Find Doctors
-          </button>
-          <button className="btn btn-ghost" onClick={() => navigate(`/results/${sessionId}`)}>
-            ← Back
-          </button>
-        </div>
-      </section>
-    </>
+    </div>
   );
 }
