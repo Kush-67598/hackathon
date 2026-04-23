@@ -15,13 +15,28 @@ const CONDITION_LABELS = {
 
 function avgSeverity(symptoms) {
   if (!symptoms || !symptoms.length) return 0;
-  const total = symptoms.reduce((sum, item) => sum + Number(item.severity || 0), 0);
+  // Handle both number and string severity values (convert "none" to 0, etc)
+  const total = symptoms.reduce((sum, item) => {
+    let val = item.severity;
+    if (typeof val === 'string') {
+      const str = val.toLowerCase().trim();
+      if (str === 'none' || str === '') val = 0;
+      else if (str === 'mild' || str === 'rarely') val = 1;
+      else if (str === 'moderate' || str === 'sometimes') val = 2;
+      else if (str === 'severe' || str === 'often') val = 3;
+      else if (str === 'always') val = 4;
+      else val = 0;
+    }
+    return sum + (Number(val) || 0);
+  }, 0);
   return Number((total / symptoms.length).toFixed(1));
 }
 
 export function TimelinePage() {
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const { userId: paramUserId } = useParams();
+  const { userId: storeUserId } = useProfileStore();
+  const userId = paramUserId || storeUserId;
   const { profile } = useProfileStore();
   const [symptomLogs, setSymptomLogs] = useState([]);
   const [sessions, setSessions] = useState([]);
