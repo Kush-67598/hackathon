@@ -1,0 +1,14 @@
+:root {
+  --color-iris: #7c6fcd;
+  --color-lavender: #b09ee8;
+  --color-mauve: #c8a7d8;
+  --color-petal: #e8d5f0;
+  --color-gold: #c9a44a;
+  --color-warm-gold: #e8c97a;
+  --color-indigo: #2a1f4e;
+  --color-white: #ffffff;
+}
+
+.bg-niramaya-gradient {
+  background: linear-gradient(135deg, #7c6fcd 0%, #b09ee8 40%, #c8a7d8 70%, #d4a0c0 100%);
+}

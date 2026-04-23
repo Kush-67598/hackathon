@@ -9,6 +9,7 @@ const CONDITION_LABELS = {
   pcos: "PCOS/PCOD tendency",
   hyperthyroidism: "Hyperthyroidism tendency",
   lifestyle_fatigue: "Lifestyle-related fatigue",
+  normal: "Good Health",
 };
 
 const PRIMARY_CONDITIONS = ["anemia", "hypothyroidism", "pcos", "hyperthyroidism", "lifestyle_fatigue"];
@@ -93,13 +94,13 @@ function getConditionSignature(condition, symptoms, labs) {
     if (!name) continue;
     
     const severityRaw = s?.severity;
-    let severity = 2;
+    let severity = 0;
     if (typeof severityRaw === "number") {
       severity = Math.max(0, Math.min(5, severityRaw));
     } else if (typeof severityRaw === "string") {
-      severity = SEVERITY_SCORES[severityRaw.toLowerCase().trim()] || 2;
+      severity = SEVERITY_SCORES[severityRaw.toLowerCase().trim()] || 0;
     } else {
-      severity = 2;
+      severity = 0;
     }
     
     const freq = (s?.frequency === "daily") ? 1 : (s?.frequency === "weekly") ? 0.65 : 0.35;
@@ -166,6 +167,12 @@ function evaluateHypothyroidism(sig, labs) {
   let score = 0;
   let contributors = [];
   
+  const hasSpecificSymptoms = (sig.weight_gain > 0.2) || (sig.cold_intolerance > 0.2) || (sig.hair_fall > 0.2);
+  
+  if (!hasSpecificSymptoms && labs.tsh === null) {
+    return { score: 0, contributors: [] };
+  }
+  
   if (sig.fatigue > 0.3) {
     score += sig.fatigue * 0.3;
     contributors.push("fatigue");
@@ -208,7 +215,13 @@ function evaluateHyperthyroidism(sig, labs) {
   let score = 0;
   let contributors = [];
   
-  if (sig.fatigue > 0.3) {
+  const hasSignificantSymptoms = (sig.weight_loss > 0.2) || (sig.palpitations > 0.2) || (sig.heat_intolerance > 0.2);
+  
+  if (!hasSignificantSymptoms && labs.tsh === null) {
+    return { score: 0, contributors: [] };
+  }
+  
+  if (sig.fatigue > 0.4) {
     score += sig.fatigue * 0.2;
     contributors.push("fatigue");
   }
@@ -220,8 +233,8 @@ function evaluateHyperthyroidism(sig, labs) {
     score += sig.heat_intolerance * 0.25;
     contributors.push("heat_intolerance");
   }
-  if (sig.palpitations > 0) {
-    score += sig.palpitations * 0.2;
+  if (sig.palpitations > 0.2) {
+    score += sig.palpitations * 0.3;
     contributors.push("palpitations");
   }
   if (sig.excessive_sweating > 0) {
@@ -232,8 +245,8 @@ function evaluateHyperthyroidism(sig, labs) {
     score += sig.tremor * 0.15;
     contributors.push("tremor");
   }
-  if (sig.anxiety > 0) {
-    score += sig.anxiety * 0.1;
+  if (sig.anxiety > 0.3) {
+    score += sig.anxiety * 0.15;
     contributors.push("anxiety");
   }
   
@@ -298,10 +311,16 @@ function evaluateLifestyleFatigue(sig, labs, lifestyle, emotionalEffects) {
   let score = 0;
   let contributors = [];
   
-  const sleepScore = sig.fatigue > 0.3 ? sig.fatigue * 0.2 : 0;
-  const stressScore = ((emotionalEffects?.mood || 0) + (emotionalEffects?.anxiety || 0)) * 0.15;
-  const exerciseScore = lifestyle?.exerciseFrequency === "none" ? 0.15 : 0;
-  const sleepHrsScore = lifestyle?.sleepHours && lifestyle.sleepHours < 6 ? 0.2 : 0;
+  const hasActualFatigue = sig.fatigue >= 0.3;
+  
+  if (!hasActualFatigue) {
+    return { score: 0, contributors: [], related_causes: [], minor_related: [] };
+  }
+  
+  const sleepScore = hasActualFatigue ? sig.fatigue * 0.25 : 0;
+  const stressScore = hasActualFatigue ? ((emotionalEffects?.mood || 0) + (emotionalEffects?.anxiety || 0)) * 0.2 : 0;
+  const exerciseScore = hasActualFatigue && lifestyle?.exerciseFrequency === "none" ? 0.2 : 0;
+  const sleepHrsScore = hasActualFatigue && lifestyle?.sleepHours && lifestyle.sleepHours < 6 ? 0.25 : 0;
   
   const hasNoLabAbnormality = (!labs.hb || labs.hb >= 12) && 
     (!labs.ferritin || labs.ferritin >= 30) && 
@@ -391,11 +410,14 @@ function toNumber(value) {
 }
 
 function normalizeSeverity(value) {
+  if (value === null || value === undefined || value === "") {
+    return 0;
+  }
   if (typeof value === "number") {
     return Math.max(0, Math.min(5, value));
   }
   const mapped = SEVERITY_MAP[String(value).toLowerCase().trim()];
-  return typeof mapped === "number" ? mapped : 2;
+  return typeof mapped === "number" ? mapped : 0;
 }
 
 function buildSymptomSignal(symptom) {
@@ -940,10 +962,13 @@ function buildExplainableOutput(params) {
   } = params;
 
   const primary = ranked[0]?.name || "insufficient_data";
-  const secondary = ranked[1]?.name || "insufficient_data";
+  const secondary = ranked[1]?.name || (primary === "normal" ? "normal" : "insufficient_data");
   
   const recommendations = [];
-  if (confidence >= 0.6) {
+  if (primary === "normal") {
+    recommendations.push("Your symptoms appear normal - keep up the healthy lifestyle!");
+    recommendations.push("Continue regular check-ups as recommended by your healthcare provider.");
+  } else if (confidence >= 0.6) {
     recommendations.push("Strong screening signal - clinical follow-up recommended");
   } else if (confidence >= 0.4) {
     recommendations.push("Moderate signal - monitoring and additional testing suggested");
@@ -1006,6 +1031,31 @@ function runScreeningEngine(params) {
   
   const { scores, labs } = getConditionSignature("all", allSymptoms, labValues || {});
   
+  const totalSymptomSignals = Object.values(scores).reduce((sum, val) => sum + val, 0);
+  
+  // Check for any lab abnormalities that would trigger disease detection
+  const hasLabAbnormalities = (labs.hb !== null && labs.hb < 12) || 
+                            (labs.tsh !== null && (labs.tsh > 4.5 || labs.tsh < 0.4)) ||
+                            (labs.ferritin !== null && labs.ferritin < 30) ||
+                            (labs.b12 !== null && labs.b12 < 200) ||
+                            (labs.vitamin_d !== null && labs.vitamin_d < 30);
+  
+  // If symptom signals are very low AND no lab abnormalities, it's truly normal
+  const isTrulyNormal = totalSymptomSignals < 0.2 && !hasLabAbnormalities;
+  
+  if (isTrulyNormal) {
+    return buildExplainableOutput({
+      ranked: [{ name: "normal", score: 0.95, contributors: [] }],
+      confidence: 0.95,
+      secondary_confidence: 0,
+      symptomBreakdown: [],
+      confounders: [],
+      minorTendencies: [],
+      related_causes: [],
+      minor_related: [],
+    });
+  }
+  
   const anemiaResult = evaluateAnemia(scores, labs);
   const hypoResult = evaluateHypothyroidism(scores, labs);
   const hyperResult = evaluateHyperthyroidism(scores, labs);
@@ -1020,8 +1070,23 @@ function runScreeningEngine(params) {
     { name: "lifestyle_fatigue", score: lifestyleResult.score, contributors: lifestyleResult.contributors || [] },
   ];
   
-  const ranked = conditions.filter(c => c.score > 0.05).sort((a, b) => b.score - a.score);
-  
+  const ranked = conditions.filter(c => c.score > 0.12).sort((a, b) => b.score - a.score);
+
+  // If all conditions have low/zero scores OR ranked is empty, return good health
+  const maxScore = ranked.length > 0 ? ranked[0].score : 0;
+  if (maxScore < 0.15 || ranked.length === 0) {
+    return buildExplainableOutput({
+      ranked: [{ name: "normal", score: 0.95, contributors: [] }],
+      confidence: 0.95,
+      secondary_confidence: 0,
+      symptomBreakdown: [],
+      confounders: [],
+      minorTendencies: [],
+      related_causes: [],
+      minor_related: [],
+    });
+  }
+
   const primary = ranked[0] || { name: "insufficient_data", score: 0, contributors: [] };
   const secondary = ranked[1] || { name: "insufficient_data", score: 0, contributors: [] };
   

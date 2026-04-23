@@ -145,172 +145,282 @@ export function LabUploadPage() {
 
   const hasAnyData = LAB_FIELDS.some(({ key }) => confirmedLabs[key] !== "");
 
-  return (
-    <>
-      <div className="panel panel-hero" style={{ marginBottom: "var(--space-6)" }}>
-        <h1>Lab Report Upload</h1>
-        <p>Upload your lab report PDF and review extracted values before running the screening.</p>
+ return (
+  <div style={{ background: '#F8FAFC', minHeight: '100vh', padding: '40px 20px' }}>
+    {/* ── HERO SECTION ── */}
+    <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+      <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#0F172A', marginBottom: '12px', letterSpacing: '-0.02em' }}>
+        Lab Report Upload
+      </h1>
+      <p style={{ color: '#64748B', fontSize: '16px', maxWidth: '500px', margin: '0 auto', lineHeight: 1.6 }}>
+        Upload your PDF lab report. Our AI will extract values to improve your screening accuracy.
+      </p>
+    </div>
+
+    {/* ── MAIN CONTENT PANEL ── */}
+    <section style={{ 
+      maxWidth: '800px', 
+      margin: '0 auto', 
+      background: '#FFFFFF', 
+      borderRadius: '32px', 
+      padding: '32px',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.03)',
+      border: '1px solid #E2E8F0',
+    }}>
+
+      {/* ── MODERN UPLOAD AREA ── */}
+      <div style={{ 
+        background: '#F5F3FF', 
+        border: '2px dashed #DCD7F9', 
+        borderRadius: '24px', 
+        padding: '48px 32px', 
+        textAlign: 'center',
+        marginBottom: '32px',
+        transition: 'all 0.3s ease'
+      }}>
+        <div style={{ fontSize: "48px", marginBottom: "16px", filter: 'drop-shadow(0 4px 12px rgba(124, 111, 205, 0.2))' }}>📄</div>
+        <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#2A1F4E', marginBottom: '8px' }}>
+          {uploading ? "Analyzing Report..." : "Upload Lab Report PDF"}
+        </h3>
+        <p style={{ color: '#64748B', fontSize: '14px', marginBottom: '24px', maxWidth: '320px', margin: '0 auto 24px' }}>
+          We support standard PDF reports. Your values will be auto-extracted for review.
+        </p>
+
+        <label style={{ 
+          display: "inline-flex", 
+          alignItems: 'center', 
+          gap: '10px',
+          background: 'linear-gradient(135deg, #7C6FCD, #9B8EDF)', 
+          color: '#FFFFFF', 
+          padding: '14px 32px', 
+          borderRadius: '16px', 
+          fontWeight: 700, 
+          cursor: uploading ? "not-allowed" : "pointer",
+          boxShadow: '0 8px 20px rgba(124, 111, 205, 0.2)',
+          transition: 'transform 0.2s ease'
+        }}>
+          {uploading ? "🤖 Processing..." : "📎 Choose PDF File"}
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+            disabled={uploading}
+          />
+        </label>
       </div>
 
-      <section className="panel">
-        {/* Upload Area */}
-        <div className="card" style={{ marginBottom: "var(--space-6)", textAlign: "center" }}>
-          <div style={{ fontSize: "var(--text-4xl)", marginBottom: "var(--space-3)" }}>📄</div>
-          <h3>Upload Lab Report PDF</h3>
-          <p style={{ marginBottom: "var(--space-4)", fontSize: "var(--text-sm)" }}>
-            We support PDF lab reports. Values will be auto-extracted and shown below for review.
-          </p>
-          <label className="btn btn-primary btn-lg" style={{ cursor: "pointer", display: "inline-flex" }}>
-            {uploading ? "🤖 Processing..." : "📎 Choose PDF File"}
-            <input
-              type="file"
-              accept="application/pdf"
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-              disabled={uploading}
-            />
-          </label>
-          {uploading && (
-            <p style={{ marginTop: "var(--space-3)", color: "var(--color-primary)", fontSize: "var(--text-sm)" }}>
-              Extracting values from your PDF...
-            </p>
-          )}
+      {/* Error & Warnings */}
+      {error && (
+        <div style={{ background: '#FFF1F2', border: '1px solid #FFE4E6', color: '#E11D48', padding: '16px', borderRadius: '16px', marginBottom: '20px', display: 'flex', gap: '12px', fontSize: '14px' }}>
+          <span>⚠️</span> {error}
         </div>
+      )}
 
-        {/* Error */}
-        {error && (
-          <div className="alert alert-error" style={{ marginBottom: "var(--space-4)" }}>
-            <span>⚠️</span> {error}
-          </div>
-        )}
+      {warnings.length > 0 && (
+        <div style={{ background: '#FFF9E5', border: '1px solid #FBF4E0', color: '#C9A44A', padding: '16px', borderRadius: '16px', marginBottom: '20px', display: 'flex', gap: '12px', fontSize: '14px' }}>
+          <span>⚡</span>
+          <div><strong>Extraction warnings:</strong> {warnings.join(" | ")}</div>
+        </div>
+      )}
 
-        {/* Warnings */}
-        {warnings.length > 0 && (
-          <div className="alert alert-warning" style={{ marginBottom: "var(--space-4)" }}>
-            <span>⚡</span>
-            <div>
-              <strong>Extraction warnings:</strong> {warnings.join(" | ")}
-            </div>
-          </div>
-        )}
-
-        {/* Lab Values Editor */}
-        {hasAnyData && (
-          <>
-            <div className="section-title">
-              <h3>🧪 Extracted Lab Values</h3>
-            </div>
-            <p style={{ fontSize: "var(--text-sm)", marginBottom: "var(--space-4)", color: "var(--color-text-muted)" }}>
-              Review and edit extracted values. Values shown in{" "}
-              <span style={{ color: "var(--color-success)", fontWeight: 600 }}>green</span> were auto-detected with high confidence.
+      {/* ── LAB VALUES EDITOR ── */}
+      {hasAnyData && (
+        <div style={{ animation: 'fadeSlideUp 0.4s ease' }}>
+          <div style={{ borderBottom: '1px solid #F1F5F9', paddingBottom: '12px', marginBottom: '24px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0F172A' }}>🧪 Extracted Lab Values</h3>
+            <p style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
+              Review and edit extracted values. High confidence matches are highlighted.
             </p>
+          </div>
 
-            <div className="form-grid">
-              {LAB_FIELDS.map(({ key, label, unit, desc, color }) => {
-                const conf = confidence[key];
-                const confPct = Math.round((conf || 0) * 100);
-                const hasValue = confirmedLabs[key] !== "";
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {LAB_FIELDS.map(({ key, label, unit, desc, color }) => {
+              const confPct = Math.round((confidence[key] || 0) * 100);
+              const hasValue = confirmedLabs[key] !== "" && confirmedLabs[key] !== null;
 
-                return (
-                  <label key={key} style={{ flexDirection: "row", alignItems: "center", gap: "var(--space-3)" }}>
-                    <div style={{ flex: 1 }}>
-                      <span style={{ fontWeight: 600 }}>{label}</span>
+              return (
+                <div key={key} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between', 
+                  padding: '16px 20px', 
+                  background: hasValue ? '#FFFFFF' : '#F8FAFC', 
+                  borderRadius: '16px', 
+                  border: hasValue ? `1.5px solid ${color}40` : '1px solid #E2E8F0',
+                  boxShadow: hasValue ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontWeight: 700, fontSize: '14px', color: '#0F172A' }}>{label}</span>
                       {confPct > 0 && (
-                        <span
-                          style={{
-                            marginLeft: "var(--space-2)",
-                            fontSize: "var(--text-xs)",
-                            color: getConfidenceColor(confPct),
-                            fontWeight: 600,
-                          }}
-                        >
-                          {confPct}%
+                        <span style={{ 
+                          fontSize: '11px', 
+                          color: getConfidenceColor(confPct), 
+                          fontWeight: 800, 
+                          background: '#F1F5F9', 
+                          padding: '2px 8px', 
+                          borderRadius: '6px' 
+                        }}>
+                          {confPct}% Match
                         </span>
                       )}
-                      <span style={{ display: "block", fontSize: "var(--text-xs)", color: "var(--color-text-muted)", fontWeight: 400 }}>
-                        {desc}
-                      </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", minWidth: "140px" }}>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={confirmedLabs[key] ?? ""}
-                        onChange={(e) => setConfirmedField(key, e.target.value)}
-                        placeholder="—"
-                        style={{
-                          width: "90px",
-                          textAlign: "right",
-                          borderColor: hasValue ? color : undefined,
-                          borderWidth: hasValue ? "2px" : undefined,
-                        }}
-                      />
-                      <span style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", minWidth: "40px" }}>
-                        {unit}
-                      </span>
-                    </div>
-                  </label>
-                );
-              })}
-            </div>
-          </>
-        )}
+                    <span style={{ fontSize: '12px', color: '#94A3B8' }}>{desc}</span>
+                  </div>
 
-        {/* Extraction Snippets */}
-        {snippets.length > 0 && (
-          <>
-            <div className="section-title">
-              <h3>📝 Raw Text Snippets</h3>
-            </div>
-            <div className="card" style={{ background: "var(--color-bg)", marginBottom: "var(--space-4)" }}>
-              {snippets.map((snippet, idx) => (
-                <p key={idx} style={{ fontSize: "var(--text-xs)", fontFamily: "monospace", marginBottom: "var(--space-2)" }}>
-                  {snippet}
-                </p>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Navigation */}
-        <div className="button-row">
-          <button className="btn btn-secondary" onClick={() => navigate("/checkin")}>
-            ← Back
-          </button>
-          <div style={{ flex: 1 }} />
-          <button
-            className="btn btn-outline btn-lg"
-            onClick={handleSkipAndScreen}
-            disabled={screening}
-          >
-            {screening ? "..." : "⏭️ Skip & Run Without Labs"}
-          </button>
-          <button
-            className="btn btn-primary btn-lg"
-            onClick={runWithLabs}
-            disabled={screening}
-            style={{ minWidth: "180px" }}
-          >
-            {screening ? "🤖 Running..." : hasAnyData ? "▶️ Run Screening" : "▶️ Run Without Labs"}
-          </button>
-        </div>
-
-        {skipWarning && (
-          <div className="alert alert-warning" style={{ marginTop: "var(--space-4)" }}>
-            <span>⚠️</span>
-            <div>
-              <strong>Results may be less accurate without lab values.</strong> For best results, upload a lab report with CBC, TSH, and ferritin levels. This screening is not a medical diagnosis.
-            </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={confirmedLabs[key] ?? ""}
+                      onChange={(e) => setConfirmedField(key, e.target.value)}
+                      placeholder="—"
+                      style={{
+                        width: "85px",
+                        padding: '10px',
+                        borderRadius: '10px',
+                        border: `1.5px solid ${hasValue ? color : '#CBD5E1'}`,
+                        textAlign: "right",
+                        fontSize: '14px',
+                        fontWeight: 700,
+                        color: '#0F172A',
+                        outline: 'none'
+                      }}
+                    />
+                    <span style={{ fontSize: "12px", color: "#64748B", fontWeight: 600, width: '45px' }}>{unit}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        )}
+        </div>
+      )}
 
-        <div className="disclaimer" style={{ fontSize: "var(--text-xs)", marginTop: "var(--space-4)" }}>
-          <span className="disclaimer-icon">ℹ️</span>
+      {/* Raw Text Snippets - Tucked away in a cleaner accordion-style card */}
+      {snippets.length > 0 && (
+        <div style={{ marginTop: '32px' }}>
+          <div style={{ marginBottom: '12px' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#64748B' }}>📝 Raw Text Snippets</h3>
+          </div>
+          <div style={{ 
+            background: "#F8FAFC", 
+            padding: '16px', 
+            borderRadius: '16px', 
+            border: '1px solid #E2E8F0',
+            maxHeight: '150px',
+            overflowY: 'auto'
+          }}>
+            {snippets.map((snippet, idx) => (
+              <p key={idx} style={{ fontSize: "11px", fontFamily: "monospace", color: '#94A3B8', marginBottom: "4px" }}>
+                {snippet}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── NAVIGATION BUTTONS ── */}
+      <div style={{ 
+        display: "flex", 
+        alignItems: "center", 
+        marginTop: "40px", 
+        paddingTop: "32px", 
+        borderTop: "1px solid #F1F5F9",
+        gap: '12px',
+        flexWrap: 'wrap'
+      }}>
+        <button 
+          className="btn btn-secondary" 
+          onClick={() => navigate("/checkin")}
+          style={{ padding: '12px 24px', borderRadius: '14px' }}
+        >
+          ← Back
+        </button>
+        
+        <div style={{ flex: 1 }} />
+
+        <button
+          onClick={handleSkipAndScreen}
+          disabled={screening}
+          style={{ 
+            background: 'transparent', 
+            color: '#64748B', 
+            border: 'none', 
+            fontSize: '14px', 
+            fontWeight: 600, 
+            cursor: 'pointer',
+            padding: '12px'
+          }}
+        >
+          {screening ? "..." : "⏭️ Skip & run without labs"}
+        </button>
+
+        <button
+          onClick={runWithLabs}
+          disabled={screening}
+          style={{
+            background: screening ? '#94A3B8' : 'linear-gradient(135deg, #7C6FCD, #9B8EDF)',
+            color: '#FFFFFF',
+            padding: '14px 32px',
+            borderRadius: '16px',
+            border: 'none',
+            fontWeight: 700,
+            fontSize: '16px',
+            cursor: screening ? 'not-allowed' : 'pointer',
+            boxShadow: screening ? 'none' : '0 8px 20px rgba(124, 111, 205, 0.2)',
+            minWidth: "180px",
+            transition: 'transform 0.2s'
+          }}
+        >
+          {screening ? "🤖 Running..." : hasAnyData ? "▶️ Run Screening" : "▶️ Run Without Labs"}
+        </button>
+      </div>
+
+      {skipWarning && (
+        <div style={{ 
+          background: '#FFF9E5', 
+          border: '1px solid #FBF4E0', 
+          color: '#C9A44A', 
+          padding: '16px', 
+          borderRadius: '16px', 
+          marginTop: '24px', 
+          display: 'flex', 
+          gap: '12px', 
+          fontSize: '13px',
+          lineHeight: 1.5
+        }}>
+          <span>⚠️</span>
           <div>
-            Auto-extraction from PDFs may not be 100% accurate. Please verify all values manually before proceeding with screening.
+            <strong>Accuracy Note:</strong> Results may be less accurate without lab values (CBC, TSH, Ferritin). This is a screening tool, not a medical diagnosis.
           </div>
         </div>
-      </section>
-    </>
-  );
+      )}
+
+      <div style={{ 
+        marginTop: '32px', 
+        padding: '16px', 
+        background: '#F1F5F9', 
+        borderRadius: '12px', 
+        display: 'flex', 
+        gap: '12px', 
+        fontSize: '12px', 
+        color: '#64748B', 
+        lineHeight: 1.5 
+      }}>
+        <span>ℹ️</span>
+        <div>
+          Auto-extraction is not 100% accurate. Please verify all values manually before proceeding.
+        </div>
+      </div>
+    </section>
+
+    <style>{`
+      @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    `}</style>
+  </div>
+);
 }

@@ -5,17 +5,17 @@ const savedUserId = localStorage.getItem("cs_userId") || "";
 export const useProfileStore = create((set, get) => ({
   userId: savedUserId,
   profile: {
-    age: 26,
-    cycleRegularity: "regular",
-    flow: "moderate",
-    averageCycleLength: 28,
+    age: null,
+    cycleRegularity: null,
+    flow: null,
+    averageCycleLength: null,
     lifestyle: {
-      sleepHours: 7,
-      stressLevel: 3,
-      exerciseFrequency: "moderate",
+      sleepHours: null,
+      stressLevel: null,
+      exerciseFrequency: null,
     },
-    dietType: "omnivore",
-    weightChange: "stable",
+    dietType: null,
+    weightChange: null,
     recentEvents: {
       pregnancy: false,
       medicationChange: false,

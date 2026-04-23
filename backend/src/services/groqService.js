@@ -7,7 +7,7 @@ Respond ONLY with valid JSON in the exact format specified. No other text.
 Your response must be a JSON object with the structure shown in the example.`;
 
 async function generateConditionDetails(session) {
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
   
   if (!apiKey || apiKey === "your_groq_api_key_here") {
     return null;
@@ -93,7 +93,7 @@ Labs: ${labSummary}`;
 }
 
 async function generateClinicalInsights(session) {
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
   
   if (!apiKey || apiKey === "your_groq_api_key_here") {
     console.warn("Groq API key not configured. Using basic report without AI insights.");

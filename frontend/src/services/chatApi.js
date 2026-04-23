@@ -1,6 +1,7 @@
 import { useScreeningStore } from "../stores/screeningStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useSymptomStore } from "../stores/symptomStore";
+import apiClient from "./apiClient";
 
 const SYSTEM_PROMPT = `You are CycleSense AI, a compassionate health companion for women. You help users understand their hormonal screening results and provide general wellness guidance.
 
@@ -66,46 +67,14 @@ export async function sendChatMessage(userMessage) {
 
   const userContext = contextParts.join("\n");
 
-  const apiKey = import.meta.env.VITE_GROQ_API_KEY;
-  if (!apiKey) {
-    return "I'm sorry, the AI chat feature isn't configured yet. Please add your Groq API key to the environment variables (VITE_GROQ_API_KEY) to enable this feature. In the meantime, please consult your healthcare provider for any health concerns.";
-  }
-
   try {
-    const response = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "system", content: userContext },
-            { role: "user", content: userMessage },
-          ],
-          temperature: 0.7,
-          max_tokens: 512,
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      const err = await response.json();
-      console.error("Groq API error:", err);
-      return "I'm having trouble connecting to my AI brain right now. Please try again in a moment, or consult your healthcare provider for any immediate concerns.";
-    }
-
-    const data = await response.json();
-    return (
-      data.choices?.[0]?.message?.content ||
-      "I'm not sure how to respond to that. Could you rephrase your question?"
-    );
+    const { data } = await apiClient.post("/chat/message", {
+      message: userMessage,
+      context: `${SYSTEM_PROMPT}\n\n${userContext}`,
+    });
+    return data?.reply || "I'm not sure how to respond to that. Could you rephrase your question?";
   } catch (err) {
-    console.error("Groq fetch error:", err);
-    return "I'm having trouble connecting to my AI brain right now. Please try again in a moment.";
+    console.error("Chat request failed:", err);
+    return err?.response?.data?.message || "I'm having trouble connecting to my AI brain right now. Please try again in a moment.";
   }
 }

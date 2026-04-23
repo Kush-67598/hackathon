@@ -20,36 +20,38 @@ const CONDITION_LABELS = {
 };
 
 const SPECIALTY_COLORS = {
-  Gynecologist: { bg: "#fdf0eb", color: "#d97049" },
-  Endocrinologist: { bg: "#eff6ff", color: "#2563eb" },
-  Hematologist: { bg: "#fdf4ff", color: "#7c3aed" },
-  "General Physician": { bg: "#e6f7ef", color: "#3da97a" },
+  Gynecologist: { bg: "#FFF1F2", color: "#E11D48" },
+  Endocrinologist: { bg: "#EFF6FF", color: "#2563EB" },
+  Hematologist: { bg: "#F5F3FF", color: "#7C6FCD" },
+  "General Physician": { bg: "#F0FDF4", color: "#16A34A" },
 };
 
 function StarRating({ rating, reviews }) {
   if (!rating) {
-    return <span style={{ color: "var(--color-text-muted)", fontSize: "var(--text-xs)" }}>No ratings yet</span>;
+    return <span style={{ color: "#94A3B8", fontSize: "12px" }}>No ratings yet</span>;
   }
 
   const full = Math.floor(rating);
   const half = rating % 1 >= 0.5;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} style={{ color: i < full ? "#f59e0b" : i === full && half ? "#f59e0b" : "#d1d5db", fontSize: "14px" }}>
-          ★
-        </span>
-      ))}
-      <span style={{ marginLeft: "4px", fontWeight: 600, color: "var(--color-text)", fontSize: "var(--text-sm)" }}>
+      <div style={{ display: "flex", gap: "1px" }}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <span key={i} style={{ color: i < full ? "#F59E0B" : i === full && half ? "#F59E0B" : "#E2E8F0", fontSize: "14px" }}>
+            ★
+          </span>
+        ))}
+      </div>
+      <span style={{ marginLeft: "6px", fontWeight: 700, color: "#1E293B", fontSize: "13px" }}>
         {rating.toFixed(1)}
       </span>
-      <span style={{ color: "var(--color-text-muted)", fontSize: "var(--text-xs)" }}>({reviews} reviews)</span>
+      <span style={{ color: "#94A3B8", fontSize: "12px" }}>({reviews})</span>
     </div>
   );
 }
 
 function DoctorCard({ doctor }) {
-  const specialtyStyle = SPECIALTY_COLORS[doctor.specialty] || { bg: "#f3f4f6", color: "#6b6b80" };
+  const specialtyStyle = SPECIALTY_COLORS[doctor.specialty] || { bg: "#F8FAFC", color: "#64748B" };
 
   function handleCall() {
     window.open(`tel:${doctor.phone}`, "_self");
@@ -67,110 +69,116 @@ function DoctorCard({ doctor }) {
     const query = doctor.address && doctor.address !== "Address unavailable"
       ? doctor.address
       : `${doctor.lat},${doctor.lng}`;
-    window.open(
-      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`,
-      "_blank"
-    );
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, "_blank");
   }
 
   return (
-    <div className="doctor-card">
-      <div className="doctor-card-header">
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", marginBottom: "var(--space-2)" }}>
-            <div className="doctor-avatar">
-              {doctor.name
-                .split(" ")
-                .filter(Boolean)
-                .slice(0, 2)
-                .map((n) => n[0])
-                .join("")}
-            </div>
-            <div>
-              <h3 style={{ marginBottom: "2px" }}>{doctor.name}</h3>
-              <span
-                style={{
-                  display: "inline-block",
-                  padding: "2px 10px",
-                  borderRadius: "var(--radius-full)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: 600,
-                  background: specialtyStyle.bg,
-                  color: specialtyStyle.color,
-                }}
-              >
-                {doctor.specialty}
-              </span>
+    <div style={{ 
+      background: '#FFFFFF', 
+      borderRadius: '24px', 
+      padding: '24px', 
+      border: '1px solid #E2E8F0',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '20px',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '16px' }}>
+          <div style={{ 
+            width: '56px', 
+            height: '56px', 
+            borderRadius: '16px', 
+            background: `linear-gradient(135deg, ${specialtyStyle.color}20, ${specialtyStyle.color}10)`,
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            fontSize: '18px',
+            fontWeight: 800,
+            color: specialtyStyle.color,
+            border: `1px solid ${specialtyStyle.color}20`
+          }}>
+            {doctor.name.split(" ").filter(Boolean).slice(0, 2).map((n) => n[0]).join("")}
+          </div>
+          <div>
+            <h3 style={{ margin: '0 0 4px', fontSize: '17px', fontWeight: 700, color: '#0F172A' }}>{doctor.name}</h3>
+            <span style={{ 
+              display: "inline-block", 
+              padding: "4px 10px", 
+              borderRadius: "8px", 
+              fontSize: "11px", 
+              fontWeight: 700, 
+              background: specialtyStyle.bg, 
+              color: specialtyStyle.color,
+              textTransform: 'uppercase',
+              letterSpacing: '0.02em'
+            }}>
+              {doctor.specialty}
+            </span>
+            <div style={{ marginTop: '8px' }}>
+              <StarRating rating={doctor.rating} reviews={doctor.reviews} />
             </div>
           </div>
-
-          <StarRating rating={doctor.rating} reviews={doctor.reviews} />
         </div>
-
         {doctor.distance != null && (
-          <div className="distance-badge">
+          <div style={{ 
+            padding: '4px 10px', 
+            background: '#F8FAFC', 
+            borderRadius: '8px', 
+            fontSize: '12px', 
+            fontWeight: 700, 
+            color: '#64748B',
+            border: '1px solid #E2E8F0'
+          }}>
             {formatDistanceAway(doctor.distance)}
           </div>
         )}
       </div>
 
-      <div className="doctor-card-body">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {(doctor.area || doctor.city) && (
-          <div className="doctor-info-row">
-            <span>
-              📍 {[doctor.area, doctor.city].filter(Boolean).join(", ")}
-            </span>
+          <div style={{ display: 'flex', gap: '10px', fontSize: '13px', color: '#475569' }}>
+            <span>📍</span> <span>{[doctor.area, doctor.city].filter(Boolean).join(", ")}</span>
           </div>
         )}
         {doctor.clinic && (
-          <div className="doctor-info-row">
-            <span>🏥 {doctor.clinic}</span>
+          <div style={{ display: 'flex', gap: '10px', fontSize: '13px', color: '#475569' }}>
+            <span>🏥</span> <span>{doctor.clinic}</span>
           </div>
         )}
         {doctor.experience != null && (
-          <div className="doctor-info-row">
-            <span>💼 {doctor.experience} years experience</span>
+          <div style={{ display: 'flex', gap: '10px', fontSize: '13px', color: '#475569' }}>
+            <span>💼</span> <span>{doctor.experience} years experience</span>
           </div>
         )}
         {doctor.consultationFee != null && (
-          <div className="doctor-info-row">
-            <span>💰 ₹{doctor.consultationFee} consultation</span>
-          </div>
-        )}
-        {doctor.availability && (
-          <div className="doctor-info-row">
-            <span>🕐 {doctor.availability}</span>
-          </div>
-        )}
-        {doctor.teleAvailable && (
-          <div className="doctor-info-row">
-            <span>📞 Tele-consultation available</span>
-          </div>
-        )}
-        {doctor.within500m && (
-          <div className="doctor-info-row">
-            <span className="indicator-badge high">Within 500 meters</span>
-          </div>
-        )}
-        <div className="doctor-info-row" style={{ color: "var(--color-text-muted)", fontSize: "var(--text-xs)" }}>
-          <span>📋 {doctor.address}</span>
-        </div>
-        {doctor.lat != null && doctor.lng != null && (
-          <div className="doctor-info-row" style={{ color: "var(--color-text-muted)", fontSize: "var(--text-xs)" }}>
-            <span>🧭 {doctor.lat.toFixed(5)}, {doctor.lng.toFixed(5)}</span>
+          <div style={{ display: 'flex', gap: '10px', fontSize: '13px', color: '#0F172A', fontWeight: 600 }}>
+            <span>💰</span> <span>₹{doctor.consultationFee} Consultation</span>
           </div>
         )}
       </div>
 
-      <div className="doctor-card-actions">
-        <button className="btn btn-primary btn-sm" onClick={handleCall} disabled={!doctor.phone}>
-          📞 Call
+      <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+        <button 
+          onClick={handleCall} 
+          disabled={!doctor.phone}
+          style={{ flex: 1, padding: '10px', borderRadius: '12px', background: '#0F172A', color: '#FFF', border: 'none', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}
+        >
+          Call
         </button>
-        <button className="btn btn-secondary btn-sm" onClick={handleWhatsApp} disabled={!doctor.phone}>
-          💬 WhatsApp
+        <button 
+          onClick={handleWhatsApp} 
+          disabled={!doctor.phone}
+          style={{ flex: 1, padding: '10px', borderRadius: '12px', background: '#25D366', color: '#FFF', border: 'none', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}
+        >
+          WhatsApp
         </button>
-        <button className="btn btn-ghost btn-sm" onClick={handleDirections}>
-          📍 Directions
+        <button 
+          onClick={handleDirections}
+          style={{ padding: '10px 14px', borderRadius: '12px', background: '#F1F5F9', color: '#475569', border: 'none', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}
+        >
+          🧭
         </button>
       </div>
     </div>
@@ -206,11 +214,7 @@ export function NearbyDoctorsPage() {
 
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
-        const next = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-
+        const next = { lat: position.coords.latitude, lng: position.coords.longitude };
         if (!lastCoordsRef.current) {
           lastCoordsRef.current = next;
           setUserLocation(next);
@@ -218,19 +222,11 @@ export function NearbyDoctorsPage() {
           setLocationLoading(false);
           return;
         }
-
-        const movedKm = haversineDistance(
-          lastCoordsRef.current.lat,
-          lastCoordsRef.current.lng,
-          next.lat,
-          next.lng
-        );
-
+        const movedKm = haversineDistance(lastCoordsRef.current.lat, lastCoordsRef.current.lng, next.lat, next.lng);
         if (movedKm >= 30) {
           lastCoordsRef.current = next;
           setUserLocation(next);
         }
-
         setLocationError("");
         setLocationLoading(false);
       },
@@ -240,44 +236,34 @@ export function NearbyDoctorsPage() {
       },
       { enableHighAccuracy: true, maximumAge: 5000, timeout: 12000 }
     );
-
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
   useEffect(() => {
     const controller = new AbortController();
-
     async function loadDoctors() {
       setDoctorsLoading(true);
       setSearchStatus("");
       try {
         if (selectedCity) {
           const cityDoctors = getDoctorsByCity(selectedCity, primaryCondition).map((doctor) => {
-            const distance =
-              userLocation?.lat != null && userLocation?.lng != null && doctor.lat && doctor.lng
-                ? haversineDistance(userLocation.lat, userLocation.lng, doctor.lat, doctor.lng)
-                : null;
-
+            const distance = userLocation?.lat != null && userLocation?.lng != null && doctor.lat && doctor.lng
+                ? haversineDistance(userLocation.lat, userLocation.lng, doctor.lat, doctor.lng) : null;
             return { ...doctor, distance, within500m: distance != null && distance <= 500, source: "local" };
           });
-
           cityDoctors.sort((a, b) => (a.distance ?? Number.MAX_SAFE_INTEGER) - (b.distance ?? Number.MAX_SAFE_INTEGER));
           setDoctors(cityDoctors);
           setRadiusUsed(null);
           setSearchSource("local");
           return;
         }
-
         if (userLocation?.lat != null && userLocation?.lng != null) {
           const nearbyResponse = await getNearbyDoctorsWithProgressiveRadius({
             lat: userLocation.lat,
             lng: userLocation.lng,
             signal: controller.signal,
-            onRadiusExpand: (radius) => {
-              setSearchStatus(`No doctors found within ${radius} meters, expanding search...`);
-            },
+            onRadiusExpand: (radius) => setSearchStatus(`Expanding search to ${radius} meters...`),
           });
-
           if (nearbyResponse.doctors.length > 0) {
             setDoctors(nearbyResponse.doctors);
             setRadiusUsed(nearbyResponse.radiusUsed);
@@ -285,42 +271,30 @@ export function NearbyDoctorsPage() {
             setSearchStatus("");
             return;
           }
-
           const fallback = getDoctorsForCondition(primaryCondition, userLocation.lat, userLocation.lng).map((doctor) => ({
-            ...doctor,
-            within500m: doctor.distance != null && doctor.distance <= 500,
-            source: "local",
+            ...doctor, within500m: doctor.distance != null && doctor.distance <= 500, source: "local",
           }));
           setDoctors(fallback);
           setRadiusUsed(nearbyResponse.radiusUsed);
           setSearchSource("local_fallback");
-          setSearchStatus(`No doctors found within ${nearbyResponse.radiusUsed} meters from OpenStreetMap.`);
           return;
         }
-
-        const generic = getDoctorsForCondition(primaryCondition, null, null).map((doctor) => ({
-          ...doctor,
-          source: "local",
-        }));
+        const generic = getDoctorsForCondition(primaryCondition, null, null).map((doctor) => ({ ...doctor, source: "local" }));
         setDoctors(generic);
         setRadiusUsed(null);
         setSearchSource("local");
       } catch (error) {
         if (error.name === "AbortError") return;
-
         const fallback = getDoctorsForCondition(primaryCondition, userLocation?.lat, userLocation?.lng).map((doctor) => ({
-          ...doctor,
-          within500m: doctor.distance != null && doctor.distance <= 500,
-          source: "local",
+          ...doctor, within500m: doctor.distance != null && doctor.distance <= 500, source: "local",
         }));
         setDoctors(fallback);
         setSearchSource("local_fallback");
-        setSearchStatus("Unable to reach OpenStreetMap right now. Showing cached local doctor list.");
+        setSearchStatus("Offline mode: showing local doctor data.");
       } finally {
         setDoctorsLoading(false);
       }
     }
-
     loadDoctors();
     return () => controller.abort();
   }, [primaryCondition, selectedCity, userLocation]);
@@ -334,143 +308,160 @@ export function NearbyDoctorsPage() {
   const cities = getAllCities();
 
   return (
-    <>
-      {/* Hero */}
-      <div className="panel panel-hero" style={{ marginBottom: "var(--space-6)" }}>
-        <h1>Find a Doctor Near You</h1>
-        <p>
+    <div style={{ background: '#F8FAFC', minHeight: '100vh', padding: '40px 20px', fontFamily: "'Inter', sans-serif" }}>
+      
+      {/* ── HERO SECTION ── */}
+      <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#0F172A', marginBottom: '12px', letterSpacing: '-0.02em' }}>
+          Find a Doctor Near You
+        </h1>
+        <p style={{ color: '#64748B', fontSize: '16px', maxWidth: '600px', margin: '0 auto', lineHeight: 1.6 }}>
           {primaryCondition
-            ? <>Based on your screening result — <strong>{conditionLabel}</strong> — here are specialists who can help.</>
-            : <>Browse verified doctors for women's health concerns across India.</>}
+            ? <>Specialists curated for <strong>{conditionLabel}</strong> near your current location.</>
+            : <>Browse verified healthcare providers for women's health concerns across India.</>}
         </p>
       </div>
 
-      {/* Location Status */}
-      <section className="panel" style={{ marginBottom: "var(--space-4)" }}>
-        <div className="panel-header">
+      {/* ── FILTER & STATUS PANEL ── */}
+      <section style={{ 
+        maxWidth: '1000px', 
+        margin: '0 auto 32px', 
+        background: '#FFFFFF', 
+        borderRadius: '28px', 
+        padding: '32px', 
+        border: '1px solid #E2E8F0',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.02)'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', marginBottom: '32px' }}>
           <div>
-            <h2>Nearby Specialists</h2>
-            <p>Curated healthcare providers for your health profile</p>
+            <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0F172A', margin: 0 }}>Nearby Specialists</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: locationLoading || doctorsLoading ? '#EAB308' : '#10B981', animation: locationLoading || doctorsLoading ? 'pulse 1.5s infinite' : 'none' }} />
+              <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 500 }}>
+                {locationLoading ? "Detecting location..." : doctorsLoading ? "Updating results..." : userLocation ? "Live location active" : "Using city filter"}
+              </span>
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
-            {locationLoading && (
-              <span style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)" }}>
-                📍 Detecting location...
-              </span>
-            )}
-            {doctorsLoading && (
-              <span style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)" }}>
-                Loading nearby doctors from OpenStreetMap...
-              </span>
-            )}
-            {!locationLoading && userLocation && (
-              <span className="indicator-badge high" style={{ fontSize: "var(--text-xs)" }}>
-                📍 Live location active
-              </span>
-            )}
-            {!locationLoading && locationError && (
-              <span className="indicator-badge low" style={{ fontSize: "var(--text-xs)" }}>
-                📍 Using city filter
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* City Filter */}
-        <div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap", marginBottom: "var(--space-5)" }}>
-          <button
-            className={`btn btn-sm ${!selectedCity ? "btn-primary" : "btn-secondary"}`}
-            onClick={() => setSelectedCity("")}
-          >
-            Near Me {userLocation ? "📍" : ""}
-          </button>
-          {cities.map((city) => (
+          
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <button
-              key={city}
-              className={`btn btn-sm ${selectedCity === city ? "btn-primary" : "btn-secondary"}`}
-              onClick={() => setSelectedCity(city)}
+              onClick={() => setSelectedCity("")}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '10px',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                background: !selectedCity ? '#7C6FCD' : '#FFFFFF',
+                color: !selectedCity ? '#FFFFFF' : '#64748B',
+                border: `1px solid ${!selectedCity ? '#7C6FCD' : '#E2E8F0'}`,
+                transition: 'all 0.2s'
+              }}
             >
-              {city}
+              Near Me 📍
             </button>
-          ))}
+            {cities.map((city) => (
+              <button
+                key={city}
+                onClick={() => setSelectedCity(city)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '10px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  background: selectedCity === city ? '#7C6FCD' : '#FFFFFF',
+                  color: selectedCity === city ? '#FFFFFF' : '#64748B',
+                  border: `1px solid ${selectedCity === city ? '#7C6FCD' : '#E2E8F0'}`,
+                  transition: 'all 0.2s'
+                }}
+              >
+                {city}
+              </button>
+            ))}
+          </div>
         </div>
 
+        {/* Alerts */}
         {locationError && (
-          <div className="alert alert-warning" style={{ marginBottom: "var(--space-4)" }}>
-            <span>ℹ️</span> {locationError} Use the city filters above to browse doctors.
+          <div style={{ background: '#FFFBEB', border: '1px solid #FEF3C7', color: '#92400E', padding: '14px 18px', borderRadius: '14px', marginBottom: '20px', fontSize: '13px', display: 'flex', gap: '10px' }}>
+            <span>ℹ️</span> {locationError}
           </div>
         )}
 
         {searchStatus && !selectedCity && (
-          <div className="alert alert-warning" style={{ marginBottom: "var(--space-4)" }}>
+          <div style={{ background: '#F5F3FF', border: '1px solid #EDE9FE', color: '#7C6FCD', padding: '14px 18px', borderRadius: '14px', marginBottom: '20px', fontSize: '13px', display: 'flex', gap: '10px' }}>
             <span>🔎</span> {searchStatus}
           </div>
         )}
 
-        {closestDoctor && (
-          <div className="alert" style={{ marginBottom: "var(--space-4)", alignItems: "center" }}>
-            <span style={{ fontSize: "var(--text-lg)" }}>🎯</span>
+        {closestDoctor && !doctorsLoading && (
+          <div style={{ background: '#F0FDF4', border: '1px solid #DCFCE7', color: '#16A34A', padding: '14px 18px', borderRadius: '14px', marginBottom: '32px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '18px' }}>🎯</span>
             <div>
-              <strong>Closest doctor near you:</strong> {closestDoctor.name} ({formatDistanceAway(closestDoctor.distance)})
-              {closestDoctor.within500m ? " • within 500 meters" : ""}
-              {radiusUsed ? ` • search radius used: ${radiusUsed}m` : ""}
-              {searchSource === "overpass_osm" ? " • powered by OpenStreetMap Overpass" : " • local fallback data"}
+              <strong>Found:</strong> {closestDoctor.name} is the closest specialist ({formatDistanceAway(closestDoctor.distance)})
             </div>
           </div>
         )}
 
-        {/* Doctor Cards */}
+        {/* ── DOCTORS GRID ── */}
         {doctorsLoading ? (
-          <div style={{ textAlign: "center", padding: "var(--space-8)", color: "var(--color-text-muted)" }}>
-            <p>Fetching closest doctors for your current location...</p>
+          <div style={{ textAlign: "center", padding: "60px 0", color: "#94A3B8" }}>
+            <div className="loader" style={{ marginBottom: '16px' }}>⏳</div>
+            <p style={{ fontSize: '14px' }}>Fetching the best medical professionals for you...</p>
           </div>
         ) : displayedDoctors.length > 0 ? (
-          <div className="doctors-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(310px, 1fr))', gap: '20px' }}>
             {displayedDoctors.map((doctor) => (
               <DoctorCard key={doctor.id} doctor={doctor} />
             ))}
           </div>
         ) : (
-          <div style={{ textAlign: "center", padding: "var(--space-10)", color: "var(--color-text-muted)" }}>
-            <div style={{ fontSize: "var(--text-4xl)", marginBottom: "var(--space-3)" }}>👩‍⚕️</div>
-            <p>No doctors found. Try selecting a city above.</p>
-            <p style={{ fontSize: "var(--text-sm)", marginTop: "var(--space-2)" }}>
-              Showing all {doctors.length} doctors — no matching filter.
-            </p>
+          <div style={{ textAlign: "center", padding: "60px 20px", background: '#F8FAFC', borderRadius: '24px', border: '1px solid #F1F5F9' }}>
+            <div style={{ fontSize: "40px", marginBottom: "16px" }}>👩‍⚕️</div>
+            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#2A1F4E' }}>No matching doctors found</h3>
+            <p style={{ fontSize: '14px', color: '#64748B', maxWidth: '300px', margin: '8px auto 0' }}>Try changing your city or search "Near Me" if location is enabled.</p>
           </div>
         )}
 
-        {/* Show More */}
-        {doctors.length > 6 && (
-          <div style={{ textAlign: "center", marginTop: "var(--space-6)" }}>
+        {/* Pagination */}
+        {doctors.length > 6 && !doctorsLoading && (
+          <div style={{ textAlign: "center", marginTop: "40px" }}>
             <button
-              className="btn btn-secondary"
               onClick={() => setShowAll(!showAll)}
+              style={{ padding: '12px 28px', borderRadius: '14px', background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#475569', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
             >
-              {showAll ? "Show Less ↑" : `Show All ${doctors.length} Doctors →`}
+              {showAll ? "Show Less" : `Show All ${doctors.length} Doctors`}
             </button>
           </div>
         )}
       </section>
 
-      {/* Disclaimer */}
-      <div className="disclaimer" style={{ marginBottom: "var(--space-4)" }}>
-        <span className="disclaimer-icon">ℹ️</span>
-        <div>
-          <strong>Not a referral or endorsement.</strong> Doctors listed here are curated based on specialty relevance. Always verify credentials and read patient reviews before booking. This is not a medical referral.
-        </div>
+      {/* ── DISCLAIMER ── */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto 40px', padding: '24px', background: '#F1F5F9', border: '1px solid #E2E8F0', borderRadius: '20px', fontSize: '13px', color: '#64748B', display: 'flex', gap: '16px', lineHeight: 1.6 }}>
+        <span style={{ fontSize: '20px' }}>ℹ️</span>
+        <p style={{ margin: 0 }}>
+          <strong>Professional Guidance:</strong> The doctors listed are curated based on specialty relevance to your screening. This list is provided for convenience and does not constitute a referral, medical advice, or endorsement. Please verify professional credentials, availability, and insurance independently.
+        </p>
       </div>
 
-      {/* Navigation */}
-      <div className="button-row">
-        <button className="btn btn-ghost" onClick={() => navigate(-1)}>
+      {/* ── FOOTER NAVIGATION ── */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', gap: '16px', justifyContent: 'center', paddingBottom: '60px' }}>
+        <button onClick={() => navigate(-1)} style={{ padding: '14px 28px', borderRadius: '16px', background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#475569', fontWeight: 700, cursor: 'pointer' }}>
           ← Back
         </button>
-        <div style={{ flex: 1 }} />
-        <button className="btn btn-secondary" onClick={() => navigate("/checkin")}>
+        <button onClick={() => navigate("/checkin")} style={{ padding: '14px 32px', borderRadius: '16px', background: 'linear-gradient(135deg, #7C6FCD, #9B8EDF)', border: 'none', color: '#FFFFFF', fontWeight: 700, cursor: 'pointer', boxShadow: '0 8px 20px rgba(124, 111, 205, 0.2)' }}>
           New Check-in
         </button>
       </div>
-    </>
+
+      <style>{`
+        @keyframes pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.4; }
+          100% { opacity: 1; }
+        }
+      `}</style>
+    </div>
   );
 }

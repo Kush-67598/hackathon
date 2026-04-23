@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createSymptomLog, parseChatSymptoms } from "../services/symptomApi";
+import { createSymptomLog } from "../services/symptomApi";
 import { useProfileStore } from "../stores/profileStore";
 import { useSymptomStore } from "../stores/symptomStore";
 
@@ -32,7 +32,11 @@ const QUESTION_BANK = {
     question: "How often do you feel unusually tired or low on energy?",
     normalValue: "none",
     options: [
-      { value: "none", label: "Not at all", desc: "I feel energetic most days" },
+      {
+        value: "none",
+        label: "Not at all",
+        desc: "I feel energetic most days",
+      },
       { value: "rarely", label: "Rarely", desc: "Occasional tiredness" },
       { value: "sometimes", label: "Sometimes", desc: "A few days each week" },
       { value: "often", label: "Often", desc: "Most days" },
@@ -91,10 +95,18 @@ const QUESTION_BANK = {
     question: "How regular are your menstrual cycles currently?",
     normalValue: "very_regular",
     options: [
-      { value: "very_regular", label: "Very regular", desc: "Predictable cycle" },
+      {
+        value: "very_regular",
+        label: "Very regular",
+        desc: "Predictable cycle",
+      },
       { value: "regular", label: "Mostly regular", desc: "Minor variation" },
       { value: "irregular", label: "Irregular", desc: "Unpredictable timing" },
-      { value: "highly_irregular", label: "Highly irregular", desc: "Major variation" },
+      {
+        value: "highly_irregular",
+        label: "Highly irregular",
+        desc: "Major variation",
+      },
       { value: "amenorrhea", label: "No periods", desc: "Periods stopped" },
     ],
     durationQ: "How long has this pattern continued?",
@@ -115,7 +127,11 @@ const QUESTION_BANK = {
       { value: "slight_gain", label: "Slight gain", desc: "2-4 kg" },
       { value: "moderate_gain", label: "Moderate gain", desc: "4-8 kg" },
       { value: "significant_gain", label: "Significant gain", desc: "8+ kg" },
-      { value: "weight_loss", label: "Unexplained loss", desc: "Unexpected loss" },
+      {
+        value: "weight_loss",
+        label: "Unexplained loss",
+        desc: "Unexpected loss",
+      },
     ],
     durationQ: "When did this start?",
     durationOptions: [
@@ -133,8 +149,16 @@ const QUESTION_BANK = {
     options: [
       { value: "none", label: "Stable", desc: "Mood is steady" },
       { value: "mild", label: "Mild shifts", desc: "Occasional ups/downs" },
-      { value: "moderate", label: "Moderate shifts", desc: "Noticeable changes" },
-      { value: "severe", label: "Strong swings", desc: "Frequent intense changes" },
+      {
+        value: "moderate",
+        label: "Moderate shifts",
+        desc: "Noticeable changes",
+      },
+      {
+        value: "severe",
+        label: "Strong swings",
+        desc: "Frequent intense changes",
+      },
     ],
     durationQ: "How long has this pattern continued?",
     durationOptions: [
@@ -166,7 +190,8 @@ const QUESTION_BANK = {
   anxiety: {
     label: "Anxiety / Restlessness",
     icon: "💭",
-    question: "How often do you feel anxious or restless without a clear trigger?",
+    question:
+      "How often do you feel anxious or restless without a clear trigger?",
     normalValue: "none",
     options: [
       { value: "none", label: "Rarely", desc: "Within normal range" },
@@ -190,8 +215,16 @@ const QUESTION_BANK = {
     options: [
       { value: "none", label: "Good", desc: "Restful most nights" },
       { value: "mild", label: "Slightly poor", desc: "Occasional poor nights" },
-      { value: "moderate", label: "Moderately poor", desc: "Frequent disturbed sleep" },
-      { value: "severe", label: "Very poor", desc: "Sleep regularly disrupted" },
+      {
+        value: "moderate",
+        label: "Moderately poor",
+        desc: "Frequent disturbed sleep",
+      },
+      {
+        value: "severe",
+        label: "Very poor",
+        desc: "Sleep regularly disrupted",
+      },
     ],
     durationQ: "How long has your sleep quality been affected?",
     durationOptions: [
@@ -248,8 +281,16 @@ const QUESTION_BANK = {
       { value: "none", label: "No significant change", desc: "Skin is normal" },
       { value: "dryness", label: "Dryness", desc: "Dry, flaky skin" },
       { value: "acne", label: "Acne/Breakouts", desc: "Frequent pimples" },
-      { value: "hyperpigmentation", label: "Dark patches", desc: "Melasma/spots" },
-      { value: "multiple", label: "Multiple issues", desc: "Several skin problems" },
+      {
+        value: "hyperpigmentation",
+        label: "Dark patches",
+        desc: "Melasma/spots",
+      },
+      {
+        value: "multiple",
+        label: "Multiple issues",
+        desc: "Several skin problems",
+      },
     ],
     durationQ: "How long have these skin changes persisted?",
     durationOptions: [
@@ -345,7 +386,11 @@ const QUESTION_BANK = {
       { value: "none", label: "Normal", desc: "Comfortable in cold" },
       { value: "mild", label: "Feel cold easily", desc: "Get cold faster" },
       { value: "moderate", label: "Very sensitive", desc: "Always cold" },
-      { value: "severe", label: "Extreme sensitivity", desc: "Hands/feet always cold" },
+      {
+        value: "severe",
+        label: "Extreme sensitivity",
+        desc: "Hands/feet always cold",
+      },
     ],
     durationQ: "How long has this persisted?",
     durationOptions: [
@@ -364,7 +409,11 @@ const QUESTION_BANK = {
       { value: "none", label: "Clear", desc: " Sharp focus" },
       { value: "mild", label: "Slightly foggy", desc: "Occasional brain fog" },
       { value: "moderate", label: "Foggy", desc: "Frequent forgetfulness" },
-      { value: "severe", label: "Very foggy", desc: "Difficulty concentrating" },
+      {
+        value: "severe",
+        label: "Very foggy",
+        desc: "Difficulty concentrating",
+      },
     ],
     durationQ: "How long have you noticed this?",
     durationOptions: [
@@ -477,7 +526,11 @@ const QUESTION_BANK = {
     options: [
       { value: "none", label: "Same as before", desc: "No change" },
       { value: "decreased", label: "Decreased", desc: "Less interest" },
-      { value: "significantly_decreased", label: "Much less", desc: "Rarely interested" },
+      {
+        value: "significantly_decreased",
+        label: "Much less",
+        desc: "Rarely interested",
+      },
       { value: "increased", label: "Increased", desc: "More interest" },
     ],
     durationQ: "How long has this persisted?",
@@ -513,27 +566,75 @@ function SymptomCard({ symptom, categoryKey, onChange }) {
   const config = QUESTION_BANK[symptom.name];
   if (!config) return null;
 
-  const currentValue = symptom.severity || "none";
-  const currentDuration = symptom.durationWeeks || 4;
+  const currentValue = symptom.severity;
+  const currentDuration = symptom.durationWeeks;
   const normalValue = config.normalValue || "none";
-  const showDuration = currentValue !== normalValue;
+  const showDuration = currentValue !== null && currentValue !== normalValue;
+
+  const handleSeverityChange = (value) => {
+    const currentCard = document.activeElement?.closest(".card-interactive");
+    onChange(categoryKey, symptom.name, "severity", value);
+
+    if (value === normalValue) {
+      onChange(categoryKey, symptom.name, "durationWeeks", null);
+      setTimeout(() => {
+        const cards = Array.from(
+          document.querySelectorAll(".card-interactive"),
+        );
+        const currentIndex = cards.indexOf(currentCard);
+        const nextCard = cards[currentIndex + 1];
+        if (nextCard)
+          nextCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+    }
+  };
+
+  const handleDurationChange = (value) => {
+    const currentCard = document.activeElement?.closest(".card-interactive");
+    onChange(categoryKey, symptom.name, "durationWeeks", value);
+    setTimeout(() => {
+      const cards = Array.from(document.querySelectorAll(".card-interactive"));
+      const currentIndex = cards.indexOf(currentCard);
+      const nextCard = cards[currentIndex + 1];
+      if (nextCard)
+        nextCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  };
 
   return (
-    <div className="card card-interactive" style={{ marginBottom: "var(--space-4)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", marginBottom: "var(--space-4)" }}>
+    <div
+      className="card card-interactive"
+      style={{ marginBottom: "var(--space-4)" }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--space-3)",
+          marginBottom: "var(--space-4)",
+        }}
+      >
         <span style={{ fontSize: "var(--text-2xl)" }}>{config.icon}</span>
         <h3 style={{ marginBottom: 0 }}>{config.label}</h3>
       </div>
 
       <div className="mcq-question">
-        <p style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginBottom: "var(--space-3)" }}>{config.question}</p>
+        <p
+          style={{
+            fontSize: "var(--text-sm)",
+            fontWeight: 500,
+            marginBottom: "var(--space-3)",
+          }}
+        >
+          {config.question}
+        </p>
         <div className="mcq-options">
           {config.options.map((opt) => (
             <button
               key={opt.value}
               type="button"
               className={`mcq-option ${currentValue === opt.value ? "selected" : ""}`}
-              onClick={() => onChange(categoryKey, symptom.name, "severity", opt.value)}
+              onClick={() => handleSeverityChange(opt.value)}
             >
               <div className="mcq-option-dot" />
               <div className="mcq-option-text">
@@ -547,18 +648,31 @@ function SymptomCard({ symptom, categoryKey, onChange }) {
 
       {showDuration && (
         <div className="mcq-question" style={{ marginTop: "var(--space-5)" }}>
-          <p style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginBottom: "var(--space-3)" }}>{config.durationQ}</p>
+          <p
+            style={{
+              fontSize: "var(--text-sm)",
+              fontWeight: 500,
+              marginBottom: "var(--space-3)",
+            }}
+          >
+            {config.durationQ}
+          </p>
           <div className="mcq-options cols-4">
             {config.durationOptions.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
                 className={`mcq-option ${currentDuration === opt.value ? "selected" : ""}`}
-                onClick={() => onChange(categoryKey, symptom.name, "durationWeeks", opt.value)}
+                onClick={() => handleDurationChange(opt.value)}
               >
                 <div className="mcq-option-dot" />
                 <div className="mcq-option-text">
-                  <span className="mcq-option-label" style={{ fontSize: "var(--text-xs)" }}>{opt.label}</span>
+                  <span
+                    className="mcq-option-label"
+                    style={{ fontSize: "var(--text-xs)" }}
+                  >
+                    {opt.label}
+                  </span>
                 </div>
               </button>
             ))}
@@ -581,11 +695,10 @@ export function SymptomCheckinPage() {
 
   const [stepIndex, setStepIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [chatText, setChatText] = useState("");
-  const [chatLoading, setChatLoading] = useState(false);
   const [error, setError] = useState("");
 
   const step = STEP_CONFIG[stepIndex];
+
   const stepSymptoms = useMemo(() => {
     if (step.key === "physical_symptoms") return physical_symptoms;
     if (step.key === "emotional_symptoms") return emotional_symptoms;
@@ -593,33 +706,31 @@ export function SymptomCheckinPage() {
   }, [step, physical_symptoms, emotional_symptoms, behavioral_indicators]);
 
   const allSymptoms = useMemo(
-    () => [...physical_symptoms, ...emotional_symptoms, ...behavioral_indicators],
-    [physical_symptoms, emotional_symptoms, behavioral_indicators]
+    () => [
+      ...physical_symptoms,
+      ...emotional_symptoms,
+      ...behavioral_indicators,
+    ],
+    [physical_symptoms, emotional_symptoms, behavioral_indicators],
   );
 
-  async function handleChatParse() {
-    if (!chatText.trim()) {
-      setError("Please describe your symptoms in the text box first.");
-      return;
-    }
+  const handleContinue = () => {
+    setStepIndex(stepIndex + 1);
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 50);
+  };
 
-    setChatLoading(true);
-    setError("");
-
-    try {
-      const parsed = await parseChatSymptoms(chatText);
-      (parsed.extractedSymptoms || []).forEach((item) => {
-        const category = item.name === "mood_fluctuations" ? "emotional_symptoms" : "physical_symptoms";
-        setSymptomField(category, item.name, "severity", item.severity);
-        setSymptomField(category, item.name, "frequency", item.frequency);
-        setSymptomField(category, item.name, "durationWeeks", item.durationWeeks);
-      });
-    } catch (err) {
-      setError(err.response?.data?.message || "Could not parse symptom text. Try filling manually.");
-    } finally {
-      setChatLoading(false);
+  const handleBack = () => {
+    if (stepIndex === 0) {
+      navigate("/onboarding");
+    } else {
+      setStepIndex(stepIndex - 1);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 50);
     }
-  }
+  };
 
   async function handleSave() {
     if (!userId) {
@@ -640,84 +751,196 @@ export function SymptomCheckinPage() {
       });
       navigate("/labs/upload");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to save symptoms. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to save symptoms. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <>
-      <div className="panel panel-hero" style={{ marginBottom: "var(--space-6)" }}>
-        <h1>Symptom Check-in</h1>
-        <p>Complete all 3 steps for a cleaner and more accurate screening signal.</p>
+    <div style={{ background: '#FAF5FF', minHeight: '100vh', padding: '40px 20px' }}>
+      {/* ── HERO SECTION ── */}
+      <div style={{ textAlign: 'center', marginBottom: '40px', padding: '0 20px' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#2A1F4E', marginBottom: '12px', letterSpacing: '-0.02em' }}>
+          Symptom Check-in
+        </h1>
+        <p style={{ color: '#2A1F4E99', fontSize: '16px', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}>
+          Complete all 3 steps for a cleaner and more accurate screening signal.
+        </p>
+
+        {/* Visual Step Tracker */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} style={{ 
+              width: i === stepIndex ? '40px' : '12px', 
+              height: '6px', 
+              borderRadius: '10px', 
+              background: i <= stepIndex ? 'linear-gradient(135deg, #7C6FCD, #9B8EDF)' : '#C8A7D840',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            }} />
+          ))}
+        </div>
       </div>
 
-      <section className="panel">
-        <div className="card" style={{ marginBottom: "var(--space-6)", background: "var(--color-accent-light)", border: "1px solid var(--color-accent-muted)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", marginBottom: "var(--space-3)" }}>
-            <span style={{ fontSize: "var(--text-xl)" }}>💬</span>
-            <div>
-              <h4 style={{ marginBottom: 0 }}>Quick Symptom Input (Beta)</h4>
-              <p style={{ fontSize: "var(--text-xs)", marginTop: "var(--space-1)" }}>
-                Example: "I feel tired with hair fall for 3 weeks and mood changes"
-              </p>
-            </div>
-          </div>
-          <textarea
-            value={chatText}
-            onChange={(e) => setChatText(e.target.value)}
-            rows={3}
-            className="text-area"
-            placeholder="Describe your symptoms in your own words..."
-            style={{ marginBottom: "var(--space-3)" }}
-          />
-          <button type="button" className="btn btn-secondary btn-sm" onClick={handleChatParse} disabled={chatLoading}>
-            {chatLoading ? "🤖 Parsing..." : "🤖 Parse & Prefill"}
-          </button>
-        </div>
+      {/* ── MAIN CONTENT PANEL ── */}
+      <section style={{ 
+        maxWidth: '800px', 
+        margin: '0 auto', 
+        background: '#FFFFFF', 
+        borderRadius: '32px', 
+        padding: '32px',
+        boxShadow: '0 20px 40px rgba(42, 31, 78, 0.04)',
+        border: '1px solid #EDE0F5',
+        position: 'relative'
+      }}>
 
-        <div className="card" style={{ marginBottom: "var(--space-4)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "var(--space-3)", flexWrap: "wrap" }}>
-            <div>
-              <h3 style={{ marginBottom: "var(--space-1)" }}>{step.icon} {step.title}</h3>
-              <p style={{ margin: 0, fontSize: "var(--text-sm)", color: "var(--color-text-muted)" }}>{step.subtitle}</p>
+        {/* Step Header Card - Soft Lavender Variation */}
+        <div style={{ 
+          background: '#FAF5FF', 
+          padding: '24px', 
+          borderRadius: '24px', 
+          marginBottom: '32px',
+          border: '1px solid #EDE0F5'
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ 
+                fontSize: '28px', 
+                background: '#FFFFFF', 
+                width: '56px', 
+                height: '56px', 
+                borderRadius: '16px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                border: '1px solid #EDE0F5'
+              }}>
+                {step.icon}
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#2A1F4E' }}>{step.title}</h3>
+                <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#2A1F4E90', fontWeight: 500 }}>{step.subtitle}</p>
+              </div>
             </div>
-            <span className="indicator-badge medium">{stepIndex + 1} / 3</span>
+            <div style={{ 
+              background: '#7C6FCD', 
+              color: '#FFFFFF', 
+              padding: '8px 16px', 
+              borderRadius: '12px', 
+              fontSize: '13px', 
+              fontWeight: 800,
+              boxShadow: '0 4px 12px rgba(124, 111, 205, 0.2)'
+            }}>
+              Step {stepIndex + 1} / 3
+            </div>
           </div>
         </div>
 
         {error && (
-          <div className="alert alert-error" style={{ marginBottom: "var(--space-4)" }}>
-            <span>⚠️</span> {error}
+          <div style={{ 
+            background: '#FFF5F5', 
+            border: '1px solid #FED7D7', 
+            color: '#C53030', 
+            padding: '16px 20px', 
+            borderRadius: '16px', 
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontSize: '14px',
+            fontWeight: 600
+          }}>
+            <span style={{ fontSize: '18px' }}>⚠️</span> {error}
           </div>
         )}
 
-        {stepSymptoms.map((symptom) => (
-          <SymptomCard
-            key={symptom.name}
-            symptom={symptom}
-            categoryKey={step.key}
-            onChange={setSymptomField}
-          />
-        ))}
+        {/* Symptom List Container */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {stepSymptoms.map((symptom) => (
+            <SymptomCard
+              key={symptom.name}
+              symptom={symptom}
+              categoryKey={step.key}
+              onChange={setSymptomField}
+              onAllComplete={true}
+            />
+          ))}
+        </div>
 
-        <div className="button-row">
-          <button type="button" className="btn btn-secondary" onClick={() => (stepIndex === 0 ? navigate("/onboarding") : setStepIndex(stepIndex - 1))}>
+        {/* ── BUTTON ROW ── */}
+        <div style={{ 
+          display: "flex", 
+          alignItems: "center", 
+          marginTop: "40px", 
+          paddingTop: "32px", 
+          borderTop: "1px solid #F1F5F9" 
+        }}>
+          <button 
+            type="button" 
+            onClick={handleBack}
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #EDE0F5',
+              color: '#7C6FCD',
+              padding: '14px 28px',
+              borderRadius: '16px',
+              fontWeight: 700,
+              fontSize: '15px',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
             ← Back
           </button>
+
           <div style={{ flex: 1 }} />
+
           {stepIndex < STEP_CONFIG.length - 1 ? (
-            <button type="button" className="btn btn-primary" onClick={() => setStepIndex(stepIndex + 1)}>
+            <button 
+              type="button" 
+              onClick={handleContinue}
+              style={{
+                background: 'linear-gradient(135deg, #7C6FCD, #9B8EDF)',
+                border: 'none',
+                color: '#FFFFFF',
+                padding: '14px 36px',
+                borderRadius: '16px',
+                fontWeight: 700,
+                fontSize: '16px',
+                cursor: 'pointer',
+                boxShadow: '0 8px 20px rgba(124, 111, 205, 0.2)',
+                transition: 'all 0.2s'
+              }}
+            >
               Continue →
             </button>
           ) : (
-            <button type="button" className="btn btn-primary btn-lg" onClick={handleSave} disabled={loading}>
+            <button 
+              type="button" 
+              onClick={handleSave} 
+              disabled={loading}
+              style={{
+                background: 'linear-gradient(135deg, #C9A44A, #E8C97A)',
+                border: 'none',
+                color: '#2A1F4E',
+                padding: '16px 40px',
+                borderRadius: '16px',
+                fontWeight: 800,
+                fontSize: '16px',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                boxShadow: '0 8px 22px rgba(201, 164, 74, 0.3)',
+                opacity: loading ? 0.7 : 1,
+                transition: 'all 0.2s'
+              }}
+            >
               {loading ? "Saving..." : "Save & Continue →"}
             </button>
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 }

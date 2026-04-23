@@ -103,185 +103,273 @@ export function OnboardingPage() {
     }
   }
 
-  return (
-    <>
-      {/* Hero Panel */}
-      <div className="panel panel-hero" style={{ marginBottom: "var(--space-6)" }}>
-        <h1>Welcome to Niramaya</h1>
-        <p>Let's personalize your screening experience. Answer a few quick questions to get started.</p>
+ return (
+    <div style={{ background: '#F8FAFC', minHeight: '100vh', padding: '40px 20px', fontFamily: "'Inter', sans-serif" }}>
+      
+      {/* ── HERO SECTION ── */}
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#0F172A', marginBottom: '12px', letterSpacing: '-0.02em' }}>
+          Welcome to Niramaya
+        </h1>
+        <p style={{ color: '#64748B', fontSize: '16px', maxWidth: '500px', margin: '0 auto', lineHeight: 1.6 }}>
+          Let's personalize your screening experience. Answer a few quick questions to get started.
+        </p>
+
+        {/* Visual Step Tracker */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
+          {STEPS.map((_, i) => (
+            <div key={i} style={{ 
+              width: i === step ? '40px' : '12px', 
+              height: '6px', 
+              borderRadius: '10px', 
+              background: i <= step ? 'linear-gradient(135deg, #7C6FCD, #9B8EDF)' : '#CBD5E1',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            }} />
+          ))}
+        </div>
       </div>
 
-      {/* Main Form Panel */}
-      <section className="panel" style={{ animationDelay: "0.1s" }}>
-        {/* Step Progress */}
-        <div className="step-row">
+      {/* ── MAIN FORM PANEL ── */}
+      <section style={{ 
+        maxWidth: '800px', 
+        margin: '0 auto', 
+        background: '#FFFFFF', 
+        borderRadius: '32px', 
+        padding: '32px',
+        boxShadow: '0 20px 40px rgba(42, 31, 78, 0.04)',
+        border: '1px solid #E2E8F0',
+        position: 'relative'
+      }}>
+
+        {/* Step Navigation Tabs */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          marginBottom: '40px', 
+          borderBottom: '1px solid #F1F5F9',
+          paddingBottom: '4px',
+          overflowX: 'auto',
+          scrollbarWidth: 'none'
+        }}>
           {STEPS.map((s, idx) => (
-            <div key={s.id} style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-              <button
-                type="button"
-                className={`step-pill ${idx === step ? "active" : idx < step ? "completed" : ""}`}
-                onClick={() => idx < step && setStep(idx)}
-              >
-                <span>{s.icon}</span>
-                {s.label}
-              </button>
-              {idx < totalSteps - 1 && <div className={`step-connector ${idx < step ? "active" : ""}`} />}
-            </div>
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => idx < step && setStep(idx)}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '12px 16px',
+                cursor: idx < step ? 'pointer' : 'default',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: idx === step ? '#7C6FCD' : idx < step ? '#1E293B' : '#94A3B8',
+                fontWeight: idx === step ? 700 : 600,
+                fontSize: '14px',
+                position: 'relative',
+                whiteSpace: 'nowrap',
+                transition: 'color 0.3s ease'
+              }}
+            >
+              <span style={{ fontSize: '18px' }}>{s.icon}</span>
+              {s.label}
+              {idx === step && (
+                <div style={{ 
+                  position: 'absolute', 
+                  bottom: '-4px', 
+                  left: 0, 
+                  right: 0, 
+                  height: '3px', 
+                  background: '#7C6FCD', 
+                  borderRadius: '10px' 
+                }} />
+              )}
+            </button>
           ))}
         </div>
 
-        {/* Step 0: Profile */}
-        {step === 0 && (
-          <div className="mcq-question">
-            <h3>What's your age range?</h3>
-            <p>Your age helps us calibrate screening sensitivity for your life stage.</p>
-            <div className="mcq-options cols-3">
-              {AGE_RANGES.map((opt) => (
-                <McqOption
-                  key={opt.value}
-                  option={opt}
-                  selected={profile.age === opt.value}
-                  onClick={() => setProfileField("age", opt.value)}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Step 1: Cycle Health */}
-        {step === 1 && (
-          <>
-            <div className="mcq-question">
-              <h3>How regular are your menstrual cycles?</h3>
-              <p>Regular cycles are a key indicator of hormonal balance.</p>
-              <div className="mcq-options cols-2">
-                {CYCLE_REGULARITY.map((opt) => (
+        {/* Form Content Area */}
+        <div style={{ minHeight: '300px' }}>
+          {/* Step 0: Profile */}
+          {step === 0 && (
+            <div className="animate-fade-in">
+              <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>What's your age range?</h3>
+              <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '24px' }}>Your age helps us calibrate screening sensitivity for your life stage.</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                {AGE_RANGES.map((opt) => (
                   <McqOption
                     key={opt.value}
                     option={opt}
-                    selected={profile.cycleRegularity === opt.value}
-                    onClick={() => setProfileField("cycleRegularity", opt.value)}
+                    selected={profile.age === opt.value}
+                    onClick={() => setProfileField("age", opt.value)}
                   />
                 ))}
               </div>
             </div>
+          )}
 
-            <div className="mcq-question">
-              <h3>How would you describe your menstrual flow?</h3>
-              <p>Heavy or irregular bleeding can signal various hormonal tendencies.</p>
-              <div className="mcq-options cols-2">
-                {FLOW_HEAVINESS.map((opt) => (
-                  <McqOption
-                    key={opt.value}
-                    option={opt}
-                    selected={profile.flow === opt.value}
-                    onClick={() => setProfileField("flow", opt.value)}
-                  />
-                ))}
+          {/* Step 1: Cycle Health */}
+          {step === 1 && (
+            <div className="animate-fade-in">
+              <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Menstrual Regularity</h3>
+                <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px' }}>Regular cycles are a key indicator of hormonal balance.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                  {CYCLE_REGULARITY.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.cycleRegularity === opt.value}
+                      onClick={() => setProfileField("cycleRegularity", opt.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Flow Description</h3>
+                <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px' }}>Heavy or irregular bleeding can signal various hormonal tendencies.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                  {FLOW_HEAVINESS.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.flow === opt.value}
+                      onClick={() => setProfileField("flow", opt.value)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-          </>
-        )}
+          )}
 
-        {/* Step 2: Lifestyle */}
-        {step === 2 && (
-          <>
-            <div className="mcq-question">
-              <h3>How well do you sleep?</h3>
-              <p>Sleep quality directly impacts hormonal regulation and symptom patterns.</p>
-              <div className="mcq-options cols-2">
-                {SLEEP_QUALITY.map((opt) => (
-                  <McqOption
-                    key={opt.value}
-                    option={opt}
-                    selected={profile.lifestyle.sleepHours === opt.value}
-                    onClick={() => setLifestyleField("sleepHours", opt.value)}
-                  />
-                ))}
+          {/* Step 2: Lifestyle */}
+          {step === 2 && (
+            <div className="animate-fade-in">
+              <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Sleep Quality</h3>
+                <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px' }}>Sleep quality directly impacts hormonal regulation and symptom patterns.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                  {SLEEP_QUALITY.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.lifestyle.sleepHours === opt.value}
+                      onClick={() => setLifestyleField("sleepHours", opt.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Typical Stress Level</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+                  {STRESS_LEVELS.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.lifestyle.stressLevel === opt.value}
+                      onClick={() => setLifestyleField("stressLevel", opt.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Exercise Frequency</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                  {EXERCISE_FREQ.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.lifestyle.exerciseFrequency === opt.value}
+                      onClick={() => setLifestyleField("exerciseFrequency", opt.value)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
+          )}
 
-            <div className="mcq-question">
-              <h3>What's your typical stress level?</h3>
-              <p>Chronic stress affects cortisol, thyroid function, and cycle regularity.</p>
-              <div className="mcq-options cols-3">
-                {STRESS_LEVELS.map((opt) => (
-                  <McqOption
-                    key={opt.value}
-                    option={opt}
-                    selected={profile.lifestyle.stressLevel === opt.value}
-                    onClick={() => setLifestyleField("stressLevel", opt.value)}
-                  />
-                ))}
+          {/* Step 3: Diet & Wellness */}
+          {step === 3 && (
+            <div className="animate-fade-in">
+              <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Dietary Profile</h3>
+                <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px' }}>Nutrition plays a critical role in hormonal health and deficiency risk.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                  {DIET_TYPES.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.dietType === opt.value}
+                      onClick={() => setProfileField("dietType", opt.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Weight Changes</h3>
+                <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px' }}>Unexplained weight shifts can indicate hormonal tendencies.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                  {WEIGHT_CHANGES.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.weightChange === opt.value}
+                      onClick={() => setProfileField("weightChange", opt.value)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
+          )}
+        </div>
 
-            <div className="mcq-question">
-              <h3>How often do you exercise?</h3>
-              <p>Physical activity supports hormonal balance and metabolic health.</p>
-              <div className="mcq-options cols-2">
-                {EXERCISE_FREQ.map((opt) => (
-                  <McqOption
-                    key={opt.value}
-                    option={opt}
-                    selected={profile.lifestyle.exerciseFrequency === opt.value}
-                    onClick={() => setLifestyleField("exerciseFrequency", opt.value)}
-                  />
-                ))}
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Step 3: Diet & Wellness */}
-        {step === 3 && (
-          <>
-            <div className="mcq-question">
-              <h3>What best describes your diet?</h3>
-              <p>Nutrition plays a critical role in hormonal health and deficiency risk.</p>
-              <div className="mcq-options cols-2">
-                {DIET_TYPES.map((opt) => (
-                  <McqOption
-                    key={opt.value}
-                    option={opt}
-                    selected={profile.dietType === opt.value}
-                    onClick={() => setProfileField("dietType", opt.value)}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="mcq-question">
-              <h3>Have you noticed any weight changes recently?</h3>
-              <p>Unexplained weight gain or loss can indicate hormonal shifts.</p>
-              <div className="mcq-options cols-2">
-                {WEIGHT_CHANGES.map((opt) => (
-                  <McqOption
-                    key={opt.value}
-                    option={opt}
-                    selected={profile.weightChange === opt.value}
-                    onClick={() => setProfileField("weightChange", opt.value)}
-                  />
-                ))}
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Error */}
         {error && (
-          <div className="alert alert-error">
+          <div style={{ 
+            background: '#FFF5F5', 
+            border: '1px solid #FED7D7', 
+            color: '#C53030', 
+            padding: '16px 20px', 
+            borderRadius: '16px', 
+            marginTop: '24px',
+            fontSize: '14px',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
             <span>⚠️</span> {error}
           </div>
         )}
 
-        {/* Navigation Buttons */}
-        <div className="button-row">
+        {/* ── BUTTON ROW ── */}
+        <div style={{ 
+          display: "flex", 
+          alignItems: "center", 
+          marginTop: "40px", 
+          paddingTop: "32px", 
+          borderTop: "1px solid #F1F5F9" 
+        }}>
           <button
             type="button"
-            className="btn btn-secondary"
             onClick={() => setStep((s) => Math.max(0, s - 1))}
             disabled={step === 0}
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              color: '#475569',
+              padding: '14px 28px',
+              borderRadius: '16px',
+              fontWeight: 700,
+              fontSize: '15px',
+              cursor: step === 0 ? 'not-allowed' : 'pointer',
+              opacity: step === 0 ? 0.5 : 1,
+              transition: 'all 0.2s'
+            }}
           >
             ← Back
           </button>
@@ -289,21 +377,74 @@ export function OnboardingPage() {
           <div style={{ flex: 1 }} />
 
           {step < totalSteps - 1 ? (
-            <button type="button" className="btn btn-primary btn-lg" onClick={() => setStep((s) => s + 1)}>
+            <button 
+              type="button" 
+              onClick={() => {
+                setStep((s) => s + 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              style={{
+                background: 'linear-gradient(135deg, #7C6FCD, #9B8EDF)',
+                border: 'none',
+                color: '#FFFFFF',
+                padding: '14px 36px',
+                borderRadius: '16px',
+                fontWeight: 700,
+                fontSize: '16px',
+                cursor: 'pointer',
+                boxShadow: '0 8px 20px rgba(124, 111, 205, 0.2)',
+                transition: 'all 0.2s'
+              }}
+            >
               Continue →
             </button>
           ) : (
             <button
               type="button"
-              className="btn btn-primary btn-lg"
               onClick={handleSubmit}
               disabled={saving}
+              style={{
+                background: 'linear-gradient(135deg, #C9A44A, #E8C97A)',
+                border: 'none',
+                color: '#2A1F4E',
+                padding: '16px 40px',
+                borderRadius: '16px',
+                fontWeight: 800,
+                fontSize: '16px',
+                cursor: saving ? 'not-allowed' : 'pointer',
+                boxShadow: '0 8px 22px rgba(201, 164, 74, 0.3)',
+                opacity: saving ? 0.7 : 1,
+                transition: 'all 0.2s'
+              }}
             >
               {saving ? "Saving..." : "Complete Setup →"}
             </button>
           )}
         </div>
       </section>
-    </>
+
+      <style>{`
+        .animate-fade-in {
+          animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .mcq-option {
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          transition: all 0.2s ease;
+        }
+        .mcq-option:hover {
+          border-color: #7C6FCD60;
+          background: #F8FAFC;
+        }
+        .mcq-option.selected {
+          border: 2px solid #7C6FCD !important;
+          background: #F5F3FF !important;
+        }
+      `}</style>
+    </div>
   );
 }

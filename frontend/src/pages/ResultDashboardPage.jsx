@@ -15,11 +15,29 @@ const CONDITION_LABELS = {
   "PCOS/PCOD tendency": "PCOS/PCOD tendency",
   lifestyle_fatigue: "Lifestyle-related fatigue",
   "Lifestyle-related fatigue": "Lifestyle-related fatigue",
+  normal: "Good Health",
+  "Good Health": "Good Health",
+  normal_health: "Good Health",
+  "Normal Health": "Good Health",
   insufficient_data: "Insufficient Data",
-  "insufficient_data": "Insufficient Data",
+  "Insufficient Data": "Insufficient Data",
 };
 
 const CONDITION_DESCRIPTIONS = {
+  "Good Health": {
+    short: "Your health indicators appear good",
+    description: "Based on your symptoms and lab values, your health indicators are within normal ranges. Continue maintaining a healthy lifestyle with balanced diet, regular exercise, adequate sleep, and regular check-ups with your healthcare provider.",
+    symptoms: ["No significant symptoms reported"],
+    foods: ["Balanced diet", "Regular exercise", "Adequate sleep", "Stay hydrated"],
+    precautions: ["Continue regular health check-ups", "Maintain healthy lifestyle", "Monitor any new symptoms"],
+  },
+  "Normal Health": {
+    short: "Your health indicators appear normal",
+    description: "Based on your symptoms and lab values, your health indicators are within normal ranges. Continue maintaining a healthy lifestyle with balanced diet, regular exercise, adequate sleep, and regular check-ups with your healthcare provider.",
+    symptoms: ["No significant symptoms reported"],
+    foods: ["Balanced diet", "Regular exercise", "Adequate sleep", "Stay hydrated"],
+    precautions: ["Continue regular health check-ups", "Maintain healthy lifestyle", "Monitor any new symptoms"],
+  },
   "Iron-deficiency anemia tendency": {
     short: "Low iron levels reducing oxygen-carrying capacity in blood",
     description: "Iron deficiency anemia occurs when your body doesn't have enough iron to produce hemoglobin, the protein in red blood cells that carries oxygen. Common causes include poor dietary intake, blood loss, or poor absorption. Symptoms include fatigue, weakness, pale skin, and shortness of breath.",
@@ -308,8 +326,9 @@ function MinorFactorCard({ item }) {
 
 function ConditionDropdown({ condition, confidence, isPrimary, aiDetails }) {
   const [expanded, setExpanded] = useState(false);
+  const isGoodHealth = (name) => name === "Good Health" || name === "Normal Health" || (name && name.toLowerCase().includes("good"));
   const fallbackDesc = getConditionDesc(condition);
-  const details = aiDetails || fallbackDesc;
+  const details = aiDetails && typeof aiDetails === 'object' && !isGoodHealth(condition) ? aiDetails : fallbackDesc;
 
   return (
     <div style={{ 
@@ -468,7 +487,11 @@ export function ResultDashboardPage() {
   };
   
   const allConditions = [primary, secondary].filter(
-    (c) => c.tendency && c.tendency !== "insufficient_data" && String(c.tendency).toLowerCase() !== "insufficient data"
+    (c) => c.tendency && 
+           c.tendency !== "insufficient_data" && 
+           String(c.tendency).toLowerCase() !== "insufficient data" &&
+           c.tendency !== "Good Health" &&
+           c.tendency !== "Normal Health"
   );
 
 function getConditionDesc(name) {
@@ -549,340 +572,365 @@ const allContributions = (latestOutput.symptom_contributions || [])
   }
 
   return (
-    <>
-      {/* Hero */}
-      <div className="panel panel-hero" style={{ marginBottom: "var(--space-6)" }}>
-        <h1>Your Screening Results</h1>
-        <p>
-          Based on your symptoms and profile, here are the hormonal tendencies identified.
-          <br />
-          <strong>Session:</strong> {sessionId}
-        </p>
+  <div style={{ background: '#F8FAFC', minHeight: '100vh', padding: '40px 20px', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    
+    {/* ── HEADER ── */}
+    <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+      <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#0F172A', marginBottom: '8px', letterSpacing: '-0.02em' }}>
+        Your Screening Results
+      </h1>
+      <p style={{ color: '#64748B', fontSize: '14px' }}>
+        Session ID: <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{sessionId}</span>
+      </p>
+    </div>
+
+    {/* ── PRIMARY RESULT HIGHLIGHT ── */}
+    <section style={{ 
+      maxWidth: '800px', 
+      margin: '0 auto 32px', 
+      background: '#FFFFFF', 
+      borderRadius: '32px', 
+      padding: '40px',
+      border: '1px solid #EDE9FE',
+      boxShadow: '0 10px 30px rgba(124, 111, 205, 0.08)',
+      textAlign: 'center',
+      position: 'relative'
+    }}>
+      <div style={{ 
+        display: 'inline-flex', 
+        padding: '8px 16px', 
+        background: '#F5F3FF', 
+        borderRadius: '999px', 
+        color: '#7C6FCD', 
+        fontSize: '12px', 
+        fontWeight: 800, 
+        textTransform: 'uppercase', 
+        letterSpacing: '0.05em',
+        marginBottom: '20px',
+        border: '1px solid #7C6FCD20'
+      }}>
+        {primary.tendency === "Good Health" || primary.tendency === "Normal Health" || primary.tendency?.toLowerCase().includes("good") ? "Health Status" : "Primary Tendency Detected"}
       </div>
 
-      {/* Condition Ranking */}
-      <section className="panel" style={{ marginBottom: "var(--space-4)" }}>
-        <div className="panel-header">
-          <div>
-            <h2>Condition Ranking</h2>
-            <p>Ranked by confidence score — higher rank means stronger screening signal</p>
-          </div>
+      <h2 style={{ fontSize: '42px', fontWeight: 800, color: '#2A1F4E', marginBottom: '16px', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+        {CONDITION_LABELS[primary.tendency] || primary.tendency}
+      </h2>
+
+      {primary.tendency === "Good Health" || primary.tendency === "Normal Health" || primary.tendency?.toLowerCase().includes("good") ? (
+        <div style={{ fontSize: "32px", fontWeight: 800, color: "#10b981", marginBottom: '24px' }}>
+          ✓ All Clear
         </div>
-
-        <RankingTable conditions={allConditions} />
-
-        {/* Primary Result Highlight */}
-        <div
-          style={{
-            marginTop: "var(--space-6)",
-            padding: "var(--space-5)",
-            background: "var(--color-primary-light)",
-            borderRadius: "var(--radius-lg)",
-            border: "1px solid var(--color-primary-muted)",
-            textAlign: "center",
-          }}
-        >
-          <p style={{ fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-primary)", fontWeight: 600, marginBottom: "var(--space-2)" }}>
-            Primary Screening Tendency
-          </p>
-          <h2 style={{ color: "var(--color-primary)", marginBottom: "var(--space-2)" }}>
-            {CONDITION_LABELS[primary.tendency] || primary.tendency}
-          </h2>
-          <div style={{ fontSize: "var(--text-3xl)", fontWeight: 800, fontFamily: "var(--font-display)", color: "var(--color-primary)" }}>
+      ) : (
+        <div style={{ marginBottom: '24px' }}>
+           <div style={{ fontSize: "56px", fontWeight: 900, color: "#7C6FCD", lineHeight: 1 }}>
             {Math.round(primary.confidence * 100)}%
           </div>
-          <p style={{ marginTop: "var(--space-2)" }}>
-            {primary.confidence >= 0.65
-              ? "High signal — strongly consider clinical follow-up"
+          <div style={{ fontSize: '14px', color: '#94A3B8', fontWeight: 600, marginTop: '4px' }}>Analysis Confidence Match</div>
+        </div>
+      )}
+
+      <div style={{ 
+        padding: '24px', 
+        background: '#F8FAFC', 
+        borderRadius: '24px', 
+        border: '1px solid #E2E8F0',
+        textAlign: 'left',
+        maxWidth: '640px',
+        margin: '0 auto'
+      }}>
+        <p style={{ fontWeight: 700, color: '#2A1F4E', marginBottom: '12px', fontSize: '16px' }}>
+          {primary.tendency === "Good Health" || primary.tendency === "Normal Health" || primary.tendency?.toLowerCase().includes("good")
+            ? "Great news! Your health indicators appear normal."
+            : primary.confidence >= 0.65
+              ? "Strong Signal: We recommend a clinical follow-up soon."
               : primary.confidence >= 0.35
-              ? "Moderate signal — monitoring and labs recommended"
-              : "Low signal — continue tracking symptoms over time"}
-          </p>
+                ? "Moderate Signal: Consider monitoring these symptoms."
+                : "Low Signal: No immediate concern, but keep tracking."}
+        </p>
+        
+        {(() => {
+          const primaryDesc = getConditionDesc(primary.tendency);
+          if (!primaryDesc) return null;
+          return (
+            <>
+              <p style={{ fontSize: "14px", color: "#64748B", lineHeight: 1.6, marginBottom: '16px' }}>
+                {primaryDesc.description}
+              </p>
+              {primaryDesc.foods?.length > 0 && (
+                <div style={{ fontSize: "13px", color: "#10b981", fontWeight: 600, display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <span>🥗</span> Recommended Foods: {primaryDesc.foods.join(", ")}
+                </div>
+              )}
+            </>
+          );
+        })()}
+      </div>
 
-          {/* Primary Condition Description */}
-          {(() => {
-            const primaryDesc = getConditionDesc(primary.tendency);
-            if (!primaryDesc) return null;
-            return (
-              <div style={{ marginTop: "var(--space-4)", textAlign: "left", padding: "var(--space-4)", background: "rgba(255,255,255,0.5)", borderRadius: "var(--radius-md)" }}>
-                <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-secondary)", fontStyle: "italic", marginBottom: "var(--space-2)" }}>
-                  {primaryDesc.short}
-                </p>
-                <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", lineHeight: 1.5, marginBottom: "var(--space-2)" }}>
-                  {primaryDesc.description}
-                </p>
-                {primaryDesc.foods && primaryDesc.foods.length > 0 && (
-                  <p style={{ fontSize: "var(--text-xs)", color: "var(--color-success)" }}>
-                    🥗 Consider: {primaryDesc.foods.join(", ")}
-                  </p>
-                )}
-              </div>
-            );
-          })()}
+      {/* Condition Dropdown Viewers */}
+      <div style={{ marginTop: '32px', textAlign: 'left' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#94A3B8', marginBottom: '12px', textTransform: 'uppercase' }}>Detailed Insights</h3>
+        <ConditionDropdown condition={primary.tendency} confidence={primary.confidence} isPrimary={true} aiDetails={conditionDetails?.primary} />
+        {secondary.tendency && secondary.tendency !== "insufficient_data" && !(secondary.tendency === "Good Health" || secondary.tendency === "Normal Health") && (
+          <ConditionDropdown condition={secondary.tendency} confidence={secondary.confidence} isPrimary={false} aiDetails={conditionDetails?.secondary} />
+        )}
+      </div>
+    </section>
+
+    {/* ── CONDITION RANKING ── */}
+    <section style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '28px', border: '1px solid #E2E8F0', overflow: 'hidden' }}>
+        <div style={{ padding: '20px 24px', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
+          <h3 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: '#0F172A' }}>📊 Condition Ranking</h3>
         </div>
-
-        {/* Expandable Details for Each Condition */}
-        <div style={{ marginTop: "var(--space-6)" }}>
-          <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--color-text)", marginBottom: "var(--space-3)" }}>
-            📋 View Symptoms, Precautions & Food Recommendations
-          </h3>
-          <ConditionDropdown 
-            condition={primary.tendency} 
-            confidence={primary.confidence} 
-            isPrimary={true} 
-            aiDetails={conditionDetails?.primary} 
-          />
-          {secondary.tendency && secondary.tendency !== "insufficient_data" && (
-            <ConditionDropdown 
-              condition={secondary.tendency} 
-              confidence={secondary.confidence} 
-              isPrimary={false} 
-              aiDetails={conditionDetails?.secondary} 
-            />
-          )}
+        <div style={{ padding: '16px' }}>
+          <RankingTable conditions={allConditions} />
         </div>
-      </section>
+      </div>
+    </section>
 
-      {/* Minor Tendencies */}
-      <section className="panel" style={{ marginBottom: "var(--space-4)" }}>
-        <div className="panel-header">
-          <div>
-            <h2>Also Consider (Common Factors)</h2>
-            <p>Informational contributors that may influence symptoms without being primary drivers</p>
-          </div>
+    {/* ── MINOR TENDENCIES (ALSO CONSIDER) ── */}
+    <section style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '28px', padding: '32px', border: '1px solid #E2E8F0' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0, color: '#2A1F4E' }}>Also Consider (Common Factors)</h2>
+          <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#64748B' }}>Informational contributors that may influence your current symptoms</p>
         </div>
 
         {minorTendencies.length > 0 ? (
-          <div className="doctors-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
             {minorTendencies.map((item, idx) => (
-              <MinorFactorCard key={`${item.name}-${idx}`} item={item} />
+              <MinorFactorCard key={idx} item={item} />
             ))}
           </div>
         ) : (
-          <p className="text-muted">No additional common contributing factors were detected above reporting threshold.</p>
+          <p style={{ color: '#94A3B8', fontSize: '14px' }}>No additional contributing factors detected above reporting threshold.</p>
         )}
-      </section>
+      </div>
+    </section>
 
-      {/* Symptom Contributions & Related Analysis */}
-      <section className="panel" style={{ marginBottom: "var(--space-4)" }}>
-        <div className="panel-header">
+    {/* ── WHY THIS RESULT? (ANALYSIS) ── */}
+    <section style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '28px', padding: '32px', border: '1px solid #E2E8F0' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '24px', color: '#2A1F4E' }}>Why This Result?</h2>
+        
+        {primary.tendency === "Good Health" || primary.tendency === "Normal Health" || primary.tendency?.toLowerCase().includes("good") ? (
           <div>
-            <h2>Why This Result?</h2>
-            <p>What your symptoms relate to and minor factors to consider</p>
-          </div>
-        </div>
-
-        {/* Primary Reason */}
-        {allContributions.length > 0 && (
-          <>
-            <div className="section-title">
-              <h3>🔬 Main Contributing Factors</h3>
+            <div style={{ marginBottom: '20px', padding: '20px', background: '#F0FDF4', borderRadius: '16px', border: '1px solid #BBF7D0' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#166534', marginBottom: '12px' }}>✓ Your health indicators are within normal ranges</h4>
+              <p style={{ fontSize: '13px', color: '#15803D', lineHeight: 1.6 }}>
+                Based on your symptom check-in and lab values (if provided), no significant hormonal patterns were detected that indicate concern. 
+                Your body's hormonal function appears to be operating within expected ranges.
+              </p>
             </div>
-            <ul className="contribution-list">
-              {allContributions.slice(0, 5).map((item, idx) => (
-                <li key={`main-${idx}`} className="contribution-item">
-                  <div>
-                    <span className="contribution-symptom capitalize">
-                      {String(item.symptom).replace(/_/g, " ")}
-                    </span>
-                    <span className="contribution-arrow"> → </span>
-                    <span className="contribution-condition capitalize">
-                      {CONDITION_LABELS[item.condition] || String(item.condition).replace(/_/g, " ")}
-                    </span>
-                  </div>
-                  <span className="contribution-score">{Math.round((item.contribution || 0) * 100)}%</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-
-        {/* Related Causes with % */}
-        {relatedCauses.length > 0 && (
-          <>
-            <div className="section-title">
-              <h3>📊 Related Causes (% Match)</h3>
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)", marginBottom: "var(--space-3)" }}>
-              {relatedCauses.map((rc, idx) => (
-                <span key={`rc-${idx}`} className="indicator-badge medium" style={{ fontSize: "var(--text-xs)" }}>
-                  {rc.name}: {rc.match}%
-                </span>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Minor Related Factors with % and Descriptions */}
-        {minorRelatedFactors.length > 0 && (
-          <>
-            <div className="section-title">
-              <h3>🩺 Minor Related Problems/Diseases</h3>
-            </div>
-            {minorRelatedFactors.map((mr, idx) => {
-              const desc = getConditionDesc(mr.name);
-              return (
-                <div key={`mr-${idx}`} style={{ 
-                  marginBottom: "var(--space-3)", 
-                  padding: "var(--space-3)", 
-                  borderRadius: "var(--radius-md)",
-                  borderLeft: "3px solid var(--color-warning)",
-                  background: "var(--color-bg-secondary)"
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-2)" }}>
-                    <span className="contribution-symptom capitalize" style={{ color: "var(--color-warning)", fontWeight: 600 }}>
-                      {String(mr.name).replace(/_/g, " ")}
-                    </span>
-                    <span className="indicator-badge medium" style={{ background: "var(--color-warning)", color: "white" }}>
-                      {mr.match}%
-                    </span>
-                  </div>
-                  {desc && (
-                    <>
-                      <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-secondary)", fontStyle: "italic", marginBottom: "var(--space-2)" }}>
-                        {desc.short}
-                      </p>
-                      <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", lineHeight: 1.5 }}>
-                        {String(desc.description).substring(0, 180)}...
-                      </p>
-                      {desc.foods && desc.foods.length > 0 && (
-                        <p style={{ fontSize: "var(--text-xs)", color: "var(--color-success)", marginTop: "var(--space-2)" }}>
-                          🥗 Consider: {desc.foods.slice(0, 4).join(", ")}
-                        </p>
-                      )}
-                    </>
-                  )}
+            
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ fontSize: '12px', textTransform: 'uppercase', color: '#94A3B8', marginBottom: '12px', letterSpacing: '0.08em', fontWeight: 700 }}>What contributed to this result?</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', background: '#F8FAFC', borderRadius: '12px' }}>
+                  <span style={{ fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '13px', color: '#475569' }}>Normal severity levels across all checked symptoms</span>
                 </div>
-              );
-            })}
-            <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginTop: "var(--space-2)" }}>
-              These are common reversible factors. Addressing them may improve your overall wellbeing.
-            </p>
-          </>
-        )}
-
-        {/* Confounding Factors */}
-        {confoundFlags.length > 0 && (
-          <>
-            <div className="section-title">
-              <h3>⚡ Contextual Factors</h3>
-            </div>
-            <div className="confound-tags">
-              {confoundFlags.map((flag) => (
-                <span key={flag} className="confound-tag">
-                  {String(flag).replace(/_/g, " ")}
-                </span>
-              ))}
-            </div>
-          </>
-        )}
-
-        {allContributions.length === 0 && relatedCauses.length === 0 && minorRelatedFactors.length === 0 && (
-          <p className="text-muted">No significant symptom contributions found.</p>
-        )}
-      </section>
-
-      {/* Recommendations */}
-      <section className="panel" style={{ marginBottom: "var(--space-4)" }}>
-        <div className="panel-header">
-          <div>
-            <h2>Recommended Next Steps</h2>
-            <p>Evidence-based suggestions based on your screening profile</p>
-          </div>
-        </div>
-
-        {recommendations.length > 0 ? (
-          recommendations.map((item, idx) => (
-            <RecommendationCard key={idx} type={getRecType(item)} text={item} />
-          ))
-        ) : (
-          <p className="text-muted">No specific recommendations available.</p>
-        )}
-      </section>
-
-      {/* Risk Progression */}
-      {progression && (
-        <section className="panel" style={{ marginBottom: "var(--space-4)" }}>
-          <div className="panel-header">
-            <div>
-              <h2>Risk Progression</h2>
-              <p>Your screening history over time</p>
-            </div>
-          </div>
-
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-value">{progression.total_sessions || 0}</div>
-              <div className="stat-label">Total Sessions</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">{Math.round((progression.confidence_change || 0) * 100)}%</div>
-              <div className="stat-label">Confidence Change</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">{progression.trend_points?.length || 0}</div>
-              <div className="stat-label">Data Points</div>
-            </div>
-          </div>
-
-          <div className="timeline-chart">
-            {(progression.trend_points || []).map((point) => (
-              <div key={point.sessionId} className="bar-wrap">
-                <div
-                  className="bar"
-                  style={{ height: `${Math.max(8, Math.round((point.confidence || 0) * 140))}px` }}
-                />
-                <span className="bar-label">{new Date(point.date).toLocaleDateString("en", { month: "short", day: "numeric" })}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', background: '#F8FAFC', borderRadius: '12px' }}>
+                  <span style={{ fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '13px', color: '#475569' }}>No abnormal patterns in lifestyle factors</span>
+                </div>
+                {latestOutput?.labValues && Object.keys(latestOutput.labValues).length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', background: '#F8FAFC', borderRadius: '12px' }}>
+                    <span style={{ fontSize: '16px' }}>✓</span>
+                    <span style={{ fontSize: '13px', color: '#475569' }}>Lab values within normal reference ranges</span>
+                  </div>
+                )}
               </div>
+            </div>
+
+            <p style={{ fontSize: '12px', color: '#94A3B8', fontStyle: 'italic' }}>
+              Remember: Continue maintaining a healthy lifestyle with balanced diet, regular exercise, adequate sleep, and regular check-ups with your healthcare provider.
+            </p>
+          </div>
+        ) : (
+          <>
+            {allContributions.length > 0 && (
+              <div style={{ marginBottom: '32px' }}>
+                <h4 style={{ fontSize: '12px', textTransform: 'uppercase', color: '#94A3B8', marginBottom: '16px', letterSpacing: '0.08em', fontWeight: 700 }}>Key Symptom Drivers</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {allContributions.slice(0, 5).map((item, idx) => (
+                    <div key={idx} style={{ 
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 20px', 
+                      background: '#F8FAFC', borderRadius: '16px', border: '1px solid #F1F5F9' 
+                    }}>
+                      <span style={{ fontWeight: 600, color: '#475569', textTransform: 'capitalize', fontSize: '14px' }}>
+                        {String(item.symptom).replace(/_/g, " ")}
+                      </span>
+                      <span style={{ fontWeight: 800, color: '#7C6FCD', fontSize: '14px' }}>
+                        {Math.round((item.contribution || 0) * 100)}% Match
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {relatedCauses.length > 0 && (
+              <div>
+                <h4 style={{ fontSize: '12px', textTransform: 'uppercase', color: '#94A3B8', marginBottom: '12px', fontWeight: 700 }}>Associated Patterns</h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {relatedCauses.map((rc, idx) => (
+                    <span key={idx} style={{ padding: '8px 14px', background: '#F1F5F9', color: '#475569', borderRadius: '10px', fontSize: '12px', fontWeight: 700, border: '1px solid #E2E8F0' }}>
+                      {rc.name} ({rc.match}%)
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </section>
+
+    {/* ── NEXT STEPS & PROGRESSION ── */}
+    <section style={{ maxWidth: '800px', margin: '0 auto 32px' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '28px', padding: '32px', border: '1px solid #E2E8F0' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '24px', color: '#2A1F4E' }}>Recommended Next Steps</h2>
+        {recommendations.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {recommendations.map((item, idx) => (
+              <RecommendationCard key={idx} type={getRecType(item)} text={item} />
             ))}
           </div>
-        </section>
-      )}
-
-      {/* Disclaimer */}
-      <div className="disclaimer">
-        <span className="disclaimer-icon">⚠️</span>
-        <div>
-          <strong>This is a screening result, not a medical diagnosis.</strong>
-          <br />
-          The information provided is based on symptom patterns and optional lab values. It does not replace professional medical evaluation, examination, or testing. Always consult a qualified healthcare provider for proper diagnosis and treatment.
-        </div>
+        ) : (
+          <p style={{ color: '#94A3B8' }}>No specific recommendations available at this time.</p>
+        )}
       </div>
+    </section>
 
-      {/* Find Doctors CTA */}
-      <div className="doctor-cta-banner">
-        <div className="doctor-cta-banner-icon">👩‍⚕️</div>
-        <div className="doctor-cta-banner-text">
-          <h4>Ready to consult a specialist?</h4>
-          <p>
-            Based on your screening result, we recommend seeing a{" "}
-            <strong>
-              {SPECIALTY_MAP[primary.tendency] || "women's health specialist"}
-            </strong>
-            . Find verified doctors near you.
-          </p>
-        </div>
-        <button
-          className="btn btn-primary"
-          onClick={() => navigate("/doctors", { state: { condition: primary.tendency } })}
-        >
-          Find Doctors →
-        </button>
+{progression && (
+  <section className="panel" style={{ marginBottom: "var(--space-4)", maxWidth: '800px', margin: '0 auto 32px' }}>
+    <div className="panel-header">
+      <div>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#2A1F4E' }}>Risk Progression</h2>
+        <p style={{ fontSize: '14px', color: '#64748B' }}>Your screening history over time</p>
       </div>
+    </div>
 
-      {/* Navigation */}
-      <div className="button-row" style={{ marginTop: "var(--space-6)" }}>
-        <button className="btn btn-secondary" onClick={() => navigate("/checkin")}>
-          ← New Check-in
-        </button>
-        <div style={{ flex: 1 }} />
-        <button className="btn btn-secondary" onClick={() => navigate(`/timeline/${userId}`)}>
-          📊 Timeline
-        </button>
-        <Link className="btn btn-accent" to={`/report/${sessionId}`}>
-          📄 Report
-        </Link>
+    <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '32px' }}>
+      <div className="stat-card" style={{ padding: '20px', background: '#F8FAFC', borderRadius: '20px', textAlign: 'center', border: '1px solid #E2E8F0' }}>
+        <div className="stat-value" style={{ fontSize: '24px', fontWeight: 800, color: '#7C6FCD' }}>{progression.total_sessions || 0}</div>
+        <div className="stat-label" style={{ fontSize: '11px', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase' }}>Total Sessions</div>
       </div>
-    </>
-  );
+      <div className="stat-card" style={{ padding: '20px', background: '#F8FAFC', borderRadius: '20px', textAlign: 'center', border: '1px solid #E2E8F0' }}>
+        <div className="stat-value" style={{ fontSize: '24px', fontWeight: 800, color: '#7C6FCD' }}>{Math.round((progression.confidence_change || 0) * 100)}%</div>
+        <div className="stat-label" style={{ fontSize: '11px', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase' }}>Confidence Change</div>
+      </div>
+      <div className="stat-card" style={{ padding: '20px', background: '#F8FAFC', borderRadius: '20px', textAlign: 'center', border: '1px solid #E2E8F0' }}>
+        <div className="stat-value" style={{ fontSize: '24px', fontWeight: 800, color: '#7C6FCD' }}>{progression.trend_points?.length || 0}</div>
+        <div className="stat-label" style={{ fontSize: '11px', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase' }}>Data Points</div>
+      </div>
+    </div>
+
+    {/* Chart Wrapper with Overflow Protection */}
+    <div style={{ 
+      maxWidth: '600px', 
+      margin: '0 auto', 
+      overflowX: 'auto', 
+      paddingBottom: '24px', // Space for the scrollbar so it doesn't hide dates
+      WebkitOverflowScrolling: 'touch' 
+    }}>
+      <div className="timeline-chart" style={{ 
+        display: 'flex', 
+        alignItems: 'flex-end', 
+        justifyContent: progression.trend_points?.length > 5 ? 'flex-start' : 'center', 
+        gap: '20px', 
+        height: '200px', 
+        padding: '0 20px',
+        minWidth: 'max-content' // Ensures container expands to show all bars
+      }}>
+        {(progression.trend_points || []).map((point) => (
+          <div key={point.sessionId} className="bar-wrap" style={{ 
+            flex: '0 0 50px', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            gap: '12px' 
+          }}>
+            <div
+              className="bar"
+              style={{ 
+                width: '24px', 
+                background: 'linear-gradient(to top, #7C6FCD, #B09EE8)',
+                borderRadius: '6px 6px 2px 2px',
+                height: `${Math.max(12, Math.round((point.confidence || 0) * 140))}px`,
+                transition: 'height 1s ease',
+                boxShadow: '0 4px 10px rgba(124, 111, 205, 0.15)'
+              }}
+            />
+            <span className="bar-label" style={{ 
+              fontSize: '10px', 
+              color: '#94A3B8', 
+              fontWeight: 800, 
+              whiteSpace: 'nowrap',
+              textTransform: 'uppercase',
+              letterSpacing: '0.02em'
+            }}>
+              {new Date(point.date).toLocaleDateString("en", { month: "short", day: "numeric" })}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+    {/* ── DOCTOR CTA ── */}
+    <section style={{ 
+      maxWidth: '800px', 
+      margin: '0 auto 32px', 
+      background: "#9b8edf", 
+      borderRadius: '28px', 
+      padding: '32px',
+      color: '#FFFFFF',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '24px',
+      boxShadow: '0 12px 24px rgba(124, 111, 205, 0.2)'
+    }}>
+      <div style={{ fontSize: '48px' }}>👩‍⚕️</div>
+      <div style={{ flex: 1 }}>
+        <h4 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '6px' }}>Consult a Specialist</h4>
+        <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.9)', margin: 0 }}>
+          Discuss these findings with a <strong>{SPECIALTY_MAP[primary.tendency] || "specialist"}</strong> for clinical guidance.
+        </p>
+      </div>
+      <button 
+        onClick={() => navigate("/doctors", { state: { condition: primary.tendency } })}
+        style={{ padding: '14px 28px', borderRadius: '14px', background: '#FFFFFF', color: '#7C6FCD', border: 'none', fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+      >
+        Find Doctors →
+      </button>
+    </section>
+
+    {/* ── FOOTER ACTIONS ── */}
+    <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', gap: '16px', justifyContent: 'center', paddingBottom: '40px' }}>
+      <button onClick={() => navigate("/checkin")} style={{ padding: '14px 24px', borderRadius: '14px', background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#475569', fontWeight: 700, cursor: 'pointer' }}>New Check-in</button>
+      <button onClick={() => navigate(`/timeline/${userId}`)} style={{ padding: '14px 24px', borderRadius: '14px', background: '#FFFFFF', border: '1px solid #E2E8F0', color: '#475569', fontWeight: 700, cursor: 'pointer' }}>📊 History</button>
+      <Link to={`/report/${sessionId}`} style={{ padding: '14px 28px', borderRadius: '14px', background: 'linear-gradient(135deg, #C9A44A, #E8C97A)', color: '#2A1F4E', fontWeight: 800, textDecoration: 'none', boxShadow: '0 4px 12px rgba(201, 164, 74, 0.2)' }}>📄 Full Report</Link>
+    </div>
+
+    {/* ── DISCLAIMER ── */}
+    <div style={{ 
+      maxWidth: '800px', margin: '0 auto 60px', padding: '24px', 
+      background: '#FFFBEB', border: '1px solid #FEF3C7', borderRadius: '20px',
+      fontSize: '13px', color: '#92400E', display: 'flex', gap: '16px', lineHeight: 1.6
+    }}>
+      <span style={{ fontSize: '20px' }}>⚠️</span>
+      <p style={{ margin: 0 }}>
+        <strong>Medical Screening Only:</strong> This result is based on algorithm patterns and is <strong>not</strong> a medical diagnosis. Always consult with a licensed doctor before starting any treatment or making health decisions.
+      </p>
+    </div>
+    
+    <style>{`
+      .capitalize { text-transform: capitalize; }
+      .timeline-chart div div { transition: height 1s ease-out; }
+    `}</style>
+  </div>
+);
 }

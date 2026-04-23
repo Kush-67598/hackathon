@@ -8,9 +8,9 @@ import {
 function buildCategorySymptoms(symptomNames) {
   return symptomNames.map((name) => ({
     name,
-    severity: 2,
+    severity: null,
     frequency: "weekly",
-    durationWeeks: 4,
+    durationWeeks: null,
     worsening: false,
   }));
 }
