@@ -2,6 +2,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const { runScreening, getScreeningHistory, getRiskProgression } = require("../services/screeningService");
 const { buildSessionReportPdf } = require("../services/reportService");
 const { generateConditionDetails } = require("../services/groqService");
+const ScreeningSession = require("../models/ScreeningSession");
 
 const screenUserRisk = asyncHandler(async (req, res) => {
   const session = await runScreening(req.body);
@@ -24,6 +25,14 @@ const getUserRiskProgression = asyncHandler(async (req, res) => {
   res.status(200).json(progression);
 });
 
+const getScreenSession = asyncHandler(async (req, res) => {
+  const session = await ScreeningSession.findById(req.params.sessionId);
+  if (!session) {
+    return res.status(404).json({ message: "Session not found" });
+  }
+  res.status(200).json(session);
+});
+
 const downloadSessionReport = asyncHandler(async (req, res) => {
   console.log("Downloading report for session:", req.params.sessionId);
   const { pdfBuffer, session } = await buildSessionReportPdf(req.params.sessionId);
@@ -35,4 +44,4 @@ const downloadSessionReport = asyncHandler(async (req, res) => {
   res.status(200).send(pdfBuffer);
 });
 
-module.exports = { screenUserRisk, getUserScreeningHistory, getUserRiskProgression, downloadSessionReport };
+module.exports = { screenUserRisk, getUserScreeningHistory, getUserRiskProgression, getScreenSession, downloadSessionReport };

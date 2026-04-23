@@ -15,6 +15,11 @@ export async function fetchRiskProgression(userId) {
   return data;
 }
 
+export async function fetchScreenSession(sessionId) {
+  const { data } = await apiClient.get(`/screen/session/${sessionId}`);
+  return data;
+}
+
 export async function downloadSessionReport(sessionId) {
   const response = await apiClient.get(`/screen/report/${sessionId}`, { responseType: "blob" });
   return response.data;

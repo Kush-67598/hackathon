@@ -179,9 +179,9 @@ export function TimelinePage() {
             return (
               <div
                 key={session.sessionId}
-                onClick={() => navigate(`/results/${session.sessionId}`)}
+                // onClick={() => navigate(`/`)}
                 style={{ 
-                  cursor: "pointer", 
+                  cursor: "", 
                   background: '#FFFFFF', 
                   padding: '24px', 
                   borderRadius: '24px', 
@@ -206,9 +206,9 @@ export function TimelinePage() {
                   <div style={{ width: `${conf}%`, height: '100%', background: color, transition: 'width 1s ease' }} />
                 </div>
 
-                <div style={{ fontSize: '13px', color: '#7C6FCD', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {/* <div style={{ fontSize: '13px', color: '#7C6FCD', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                   View Analysis <span>→</span>
-                </div>
+                </div> */}
               </div>
             );
           })}

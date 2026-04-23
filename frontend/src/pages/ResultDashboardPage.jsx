@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { fetchRiskProgression } from "../services/screenApi";
+import { fetchRiskProgression, fetchScreenSession } from "../services/screenApi";
 import { useProfileStore } from "../stores/profileStore";
 import { useScreeningStore } from "../stores/screeningStore";
 
@@ -433,21 +433,43 @@ export function ResultDashboardPage() {
   const { sessionId } = useParams();
   const navigate = useNavigate();
   const { userId } = useProfileStore();
-  const { latestOutput, conditionDetails } = useScreeningStore();
+  const { latestOutput, setLatestOutput, conditionDetails, setConditionDetails } = useScreeningStore();
   const [progression, setProgression] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadProgression() {
-      if (!userId) return;
-      try {
-        const data = await fetchRiskProgression(userId);
-        setProgression(data);
-      } catch {
-        setProgression(null);
+    async function loadData() {
+      // If we have a sessionId and no latestOutput, fetch it
+      if (sessionId && (!latestOutput || !latestOutput.primary_tendency)) {
+        try {
+          const session = await fetchScreenSession(sessionId);
+          if (session?.output) {
+            setLatestOutput(session.output);
+            setConditionDetails(session.conditionDetails || {});
+          }
+        } catch (err) {
+          console.error("Failed to load session:", err);
+        }
       }
+      // Load progression
+      if (userId) {
+        try {
+          const data = await fetchRiskProgression(userId);
+          setProgression(data);
+        } catch { setProgression(null); }
+      }
+      setLoading(false);
     }
-    loadProgression();
-  }, [userId]);
+    loadData();
+  }, [sessionId, userId, latestOutput]);
+
+  if (loading) {
+    return (
+      <div className="panel panel-hero">
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
 
   if (!latestOutput) {
     return (
