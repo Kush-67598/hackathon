@@ -50,7 +50,7 @@ export function AppShell({ children }) {
 
   const handleLogout = () => {
     clearAuth();
-    navigate("/login");
+    navigate("/");
   };
 
   const navItems = token ? navItemsForLoggedIn : [];
