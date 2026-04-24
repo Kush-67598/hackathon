@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logo from "../assets/niramaya-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import { useAuthStore } from "../stores/authStore";
@@ -71,10 +72,9 @@ export function LoginPage() {
             display: "flex", 
             alignItems: "center", 
             justifyContent: "center", 
-            fontSize: "28px",
             boxShadow: "0 8px 16px rgba(124, 111, 205, 0.2)" 
           }}>
-            🌸
+            <img src={logo} alt="Niramaya Logo" style={{ width: 38, height: 38, objectFit: 'contain', display: 'block' }} />
           </div>
           <h1 style={{ fontSize: "28px", fontWeight: 800, color: "#0F172A", marginBottom: "10px", letterSpacing: "-0.02em" }}>
             Welcome Back

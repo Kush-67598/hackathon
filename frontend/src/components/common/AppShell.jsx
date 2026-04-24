@@ -1,4 +1,5 @@
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import logo from "../../assets/niramaya-logo.png";
 import { useProfileStore } from "../../stores/profileStore";
 import { useAuthStore } from "../../stores/authStore";
 import { useEffect, useState } from "react";
@@ -78,8 +79,8 @@ export function AppShell({ children }) {
           onClick={() => navigate("/")} 
           style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
         >
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${COLORS.iris}, #9B8EDF)`, display: 'grid', placeItems: 'center' }}>
-            <img src="/niramaya-logo.svg" alt="" style={{ width: 20, filter: 'brightness(0) invert(1)' }} />
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${COLORS.iris}, #9B8EDF)`, display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
+            <img src={logo} alt="Niramaya Logo" style={{ width: 24, height: 24, objectFit: 'contain', display: 'block' }} />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ fontWeight: 800, fontSize: "18px", color: COLORS.indigo, lineHeight: 1 }}>Niramaya</span>

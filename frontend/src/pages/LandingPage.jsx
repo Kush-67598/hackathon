@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import logo from "../assets/niramaya-logo.png";
 
 const COLORS = {
   iris: "#7C6FCD",
@@ -45,6 +46,8 @@ export function LandingPage() {
           transition={{ duration: 0.8 }}
           style={{ position: "relative", zIndex: 1, maxWidth: 680 }}
         >
+
+
           {/* Pill badge */}
           <motion.div
             initial={{ opacity: 0, y: -12 }}
@@ -107,9 +110,45 @@ export function LandingPage() {
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          style={{ position: "absolute", right: "6vw", top: "50%", transform: "translateY(-50%)", display: "none", zIndex: 1 }}
+          style={{ 
+            position: "absolute",
+            right: "6vw",
+            top: "18%",
+            transform: "translateY(0)",
+            zIndex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+            width: "28vw",
+            height: "28vw",
+            minWidth: 220,
+            minHeight: 220,
+            maxWidth: 380,
+            maxHeight: 380,
+          }}
           className="hero-card"
-        />
+        >
+          <motion.img
+            src={logo}
+            alt="Niramaya Logo"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+            style={{ 
+              width: "100%",
+              height: "100%",
+              maxWidth: 380,
+              maxHeight: 380,
+              minWidth: 220,
+              minHeight: 220,
+              borderRadius: "50%",
+              boxShadow: "0 6px 32px 0 rgb(202, 200, 215)",
+              border: "0px solid white", // thinner white border
+              objectFit: "contain"
+            }}
+          />
+        </motion.div>
       </section>
 
       {/* ── VALUE PROPS ── */}

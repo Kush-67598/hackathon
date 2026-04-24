@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logo from "../assets/niramaya-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authApi";
 import { useAuthStore } from "../stores/authStore";
@@ -78,7 +79,7 @@ export function SignupPage() {
             fontSize: "28px",
             boxShadow: "0 8px 16px rgba(124, 111, 205, 0.2)" 
           }}>
-            🌸
+            <img src={logo} alt="Niramaya Logo" style={{ width: "32px", height: "32px" }} />
           </div>
           <h1 style={{ fontSize: "28px", fontWeight: 800, color: "#0F172A", marginBottom: "10px", letterSpacing: "-0.02em" }}>
             Create Your Account
