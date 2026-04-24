@@ -53,6 +53,10 @@ export const PHYSICAL_SYMPTOMS = [
   "shortness_breath",
   "pale_skin",
   "pica_cravings",
+  "slow_heart_rate",
+  "temperature_sensitivity",
+  "acanthosis_nigricans",
+  "skin_tags",
 ];
 
 export const MEDICAL_HISTORY = [

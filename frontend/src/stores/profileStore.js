@@ -6,6 +6,8 @@ export const useProfileStore = create((set, get) => ({
   userId: savedUserId,
   profile: {
     age: null,
+    height: null,
+    weight: null,
     cycleRegularity: null,
     flow: null,
     averageCycleLength: null,

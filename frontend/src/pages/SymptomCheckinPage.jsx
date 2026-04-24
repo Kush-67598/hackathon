@@ -868,6 +868,83 @@ const QUESTION_BANK = {
     durationQ: null,
     durationOptions: [],
   },
+  // ==== NEW CONDITION QUESTIONS ====
+  slow_heart_rate: {
+    label: "Heart Rate",
+    icon: "💓",
+    question: "How do you feel your heart rate is usually?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Normal", desc: "Regular heart rate" },
+      { value: "mild", label: "Slower than usual", desc: "Noticeably slower" },
+      { value: "moderate", label: "Much slower", desc: "Fatigue with low HR" },
+      { value: "severe", label: "Very slow", desc: "Regularly dizzy" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  temperature_sensitivity: {
+    label: "Temperature Sensitivity",
+    icon: "🌡️",
+    question: "How sensitive are you to temperature changes?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "Not sensitive", desc: "Normal tolerance" },
+      { value: "mild", label: "Sensitive to Cold", desc: "Feel cold easily" },
+      { value: "moderate", label: "Very sensitive to Cold", desc: "Always cold" },
+      { value: "severe", label: "Extreme cold sensitivity", desc: "Hands/feet always cold" },
+    ],
+    durationQ: "How long has this persisted?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-2 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  acanthosis_nigricans: {
+    label: "Dark Skin Patches",
+    icon: "🎨",
+    question: "Have you noticed dark, velvety patches of skin (neck, armpits, groin)?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "No such patches" },
+      { value: "mild", label: "Mild", desc: "Slight darkening" },
+      { value: "moderate", label: "Moderate", desc: "Noticeable patches" },
+      { value: "severe", label: "Severe", desc: "Extensive dark patches" },
+    ],
+    durationQ: "How long have you had these?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-3 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
+  skin_tags: {
+    label: "Skin Tags",
+    icon: "🏏",
+    question: "Have you noticed any new skin tags appearing recently?",
+    normalValue: "none",
+    options: [
+      { value: "none", label: "No", desc: "No new skin tags" },
+      { value: "mild", label: "Few", desc: "1-2 skin tags" },
+      { value: "moderate", label: "Some", desc: "3-5 skin tags" },
+      { value: "severe", label: "Many", desc: "Multiple skin tags" },
+    ],
+    durationQ: "How long have you noticed these?",
+    durationOptions: [
+      { value: 4, label: "About a month" },
+      { value: 8, label: "1-3 months" },
+      { value: 12, label: "3-6 months" },
+      { value: 24, label: "6+ months" },
+    ],
+  },
 };
 
 function SymptomCard({ symptom, categoryKey, onChange }) {

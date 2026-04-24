@@ -5,6 +5,7 @@ import { useProfileStore } from "../stores/profileStore";
 
 const STEPS = [
   { id: "profile", label: "Profile", icon: "👤" },
+  { id: "bmi", label: " BMI ", icon: "⚖️" },
   { id: "cycle", label: "Cycle Health", icon: "🔄" },
   { id: "lifestyle", label: "Lifestyle", icon: "🌿" },
   { id: "diet", label: "Diet & Wellness", icon: "🍎" },
@@ -66,6 +67,34 @@ const WEIGHT_CHANGES = [
   { value: "stable", label: "Stable", desc: "No significant change" },
   { value: "gained", label: "Weight Gained", desc: "Noticed weight increase" },
   { value: "lost", label: "Weight Lost", desc: "Noticed weight decrease" },
+];
+
+const HEIGHT_RANGES = [
+  { value: 145, label: "145 cm (4'9\")", desc: "< 5'0\"" },
+  { value: 150, label: "150 cm (4'11\")", desc: "5'0\" - 5'1\"" },
+  { value: 155, label: "155 cm (5'1\")", desc: "5'1\" - 5'2\"" },
+  { value: 160, label: "160 cm (5'3\")", desc: "5'3\" - 5'4\"" },
+  { value: 165, label: "165 cm (5'5\")", desc: "5'5\" - 5'6\"" },
+  { value: 170, label: "170 cm (5'7\")", desc: "5'7\" - 5'8\"" },
+  { value: 175, label: "175 cm (5'9\")", desc: "5'9\" - 5'10\"" },
+  { value: 180, label: "180 cm (5'11\")", desc: "6'0\"+" },
+  { value: 185, label: "185 cm (6'1\")", desc: "> 6'0\"" },
+];
+
+const WEIGHT_RANGES = [
+  { value: 40, label: "40-45 kg", desc: "88-99 lbs" },
+  { value: 48, label: "45-50 kg", desc: "99-110 lbs" },
+  { value: 55, label: "50-55 kg", desc: "110-121 lbs" },
+  { value: 60, label: "55-60 kg", desc: "121-132 lbs" },
+  { value: 65, label: "60-65 kg", desc: "132-143 lbs" },
+  { value: 70, label: "65-70 kg", desc: "143-154 lbs" },
+  { value: 75, label: "70-75 kg", desc: "154-165 lbs" },
+  { value: 80, label: "75-80 kg", desc: "165-176 lbs" },
+  { value: 85, label: "80-85 kg", desc: "176-187 lbs" },
+  { value: 90, label: "85-90 kg", desc: "187-198 lbs" },
+  { value: 95, label: "90-95 kg", desc: "198-209 lbs" },
+  { value: 100, label: "95-100 kg", desc: "209-220 lbs" },
+  { value: 110, label: "100+ kg", desc: "220+ lbs" },
 ];
 
 function McqOption({ option, selected, onClick }) {
@@ -209,8 +238,43 @@ export function OnboardingPage() {
             </div>
           )}
 
-          {/* Step 1: Cycle Health */}
+          {/* Step 1: BMI */}
           {step === 1 && (
+            <div className="animate-fade-in">
+              <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Height</h3>
+                <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px' }}>Your height helps calculate BMI for accurate screening.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px' }}>
+                  {HEIGHT_RANGES.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.height === opt.value}
+                      onClick={() => setProfileField("height", opt.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Weight</h3>
+                <p style={{ fontSize: '14px', color: '#64748B', marginBottom: '20px' }}>Your weight is important for health screening accuracy.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+                  {WEIGHT_RANGES.map((opt) => (
+                    <McqOption
+                      key={opt.value}
+                      option={opt}
+                      selected={profile.weight === opt.value}
+                      onClick={() => setProfileField("weight", opt.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Cycle Health */}
+          {step === 2 && (
             <div className="animate-fade-in">
               <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Menstrual Regularity</h3>
@@ -244,8 +308,8 @@ export function OnboardingPage() {
             </div>
           )}
 
-          {/* Step 2: Lifestyle */}
-          {step === 2 && (
+          {/* Step 3: Lifestyle */}
+          {step === 3 && (
             <div className="animate-fade-in">
               <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Sleep Quality</h3>
@@ -292,8 +356,8 @@ export function OnboardingPage() {
             </div>
           )}
 
-          {/* Step 3: Diet & Wellness */}
-          {step === 3 && (
+          {/* Step 4: Diet & Wellness */}
+          {step === 4 && (
             <div className="animate-fade-in">
               <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Dietary Profile</h3>

@@ -76,6 +76,8 @@ const SEVERITY_SCORES = {
   brittle: 2,
   very_brittle: 3,
   no_significant_change: 0,
+  yes: 1,
+  no: 0,
 };
 
 function getConditionSignature(condition, symptoms, labs) {
@@ -89,7 +91,7 @@ function getConditionSignature(condition, symptoms, labs) {
     "night_sweats", "depression", "irritability", "stress", "dry_skin", "constipation", "slow_heart_rate",
     "excess_hair", "thinning_hair", "abdominal_weight", "sugar_cravings", "shortness_breath", "pale_skin", "pica_cravings",
     "thyroid_swelling", "family_thyroid", "thyroid_medication", "missed_periods", "family_pcos", "spoon_nails", "tea_coffee_meals",
-    "anemia_diagnosed", "iron_rich_food"
+    "anemia_diagnosed", "iron_rich_food", "temperature_sensitivity", "acanthosis_nigricans", "skin_tags"
   ];
   
   const scores = {
@@ -102,7 +104,7 @@ function getConditionSignature(condition, symptoms, labs) {
     pelvic_pain: 0, no_period: 0, pelvic_pressure: 0, cravings: 0, muscle_cramps: 0, dry_skin: 0, constipation: 0,
     excess_hair: 0, thinning_hair: 0, abdominal_weight: 0, sugar_cravings: 0, shortness_breath: 0, pale_skin: 0, pica_cravings: 0,
     thyroid_swelling: 0, family_thyroid: 0, thyroid_medication: 0, missed_periods: 0, family_pcos: 0, spoon_nails: 0, tea_coffee_meals: 0,
-    anemia_diagnosed: 0, iron_rich_food: 0,
+    anemia_diagnosed: 0, iron_rich_food: 0, slow_heart_rate: 0, temperature_sensitivity: 0, acanthosis_nigricans: 0, skin_tags: 0,
   };
   
   if (!Array.isArray(symptoms) || symptoms.length === 0) {
@@ -249,6 +251,14 @@ function evaluateHypothyroidism(sig, labs) {
     score += sig.family_thyroid * 0.25;
     contributors.push("family_thyroid");
   }
+  if (sig.slow_heart_rate > 0) {
+    score += sig.slow_heart_rate * 0.2;
+    contributors.push("slow_heart_rate");
+  }
+  if (sig.temperature_sensitivity > 0) {
+    score += sig.temperature_sensitivity * 0.15;
+    contributors.push("temperature_sensitivity");
+  }
   if (sig.low_motivation > 0) {
     score += sig.low_motivation * 0.1;
     contributors.push("low_motivation");
@@ -358,6 +368,14 @@ function evaluatePCOS(sig, labs) {
   if (sig.family_pcos > 0) {
     score += sig.family_pcos * 0.25;
     contributors.push("family_pcos");
+  }
+  if (sig.acanthosis_nigricans > 0) {
+    score += sig.acanthosis_nigricans * 0.2;
+    contributors.push("acanthosis_nigricans");
+  }
+  if (sig.skin_tags > 0) {
+    score += sig.skin_tags * 0.15;
+    contributors.push("skin_tags");
   }
   
   if (labs.lh !== null && labs.fsh !== null && labs.fsh > 0) {
