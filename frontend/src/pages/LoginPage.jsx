@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logo from "../assets/niramaya-logo.png";
+import logo from "../assets/Niramaya-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import { useAuthStore } from "../stores/authStore";

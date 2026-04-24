@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import logo from "../assets/niramaya-logo.png";
+import logo from "../assets/Niramaya-logo.png";
 
 const COLORS = {
   iris: "#7C6FCD",
