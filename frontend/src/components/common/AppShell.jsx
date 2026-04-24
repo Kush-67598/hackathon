@@ -1,5 +1,5 @@
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import logo from "../../assets/niramaya-logo.png";
+import logo from "../../assets/Niramaya-logo.png";
 import { useProfileStore } from "../../stores/profileStore";
 import { useAuthStore } from "../../stores/authStore";
 import { useEffect, useState } from "react";
